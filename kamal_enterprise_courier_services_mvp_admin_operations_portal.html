@@ -1,0 +1,3122 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kamal Enterprise — Courier Services, MVP &amp; Admin Operations Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brandBlue: {
+              DEFAULT: '#0F4C81',
+              bright: '#1D4ED8',
+              dark: '#0A3357',
+              soft: '#EFF6FF',
+            },
+            brandOrange: {
+              DEFAULT: '#EA580C',
+              light: '#F97316',
+              soft: '#FFF7ED',
+            },
+          },
+          boxShadow: {
+            card: '0 10px 28px -12px rgba(15, 76, 129, 0.14)',
+            float: '0 20px 44px -14px rgba(15, 76, 129, 0.22)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    input[type="range"].ke-range {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 7px;
+      border-radius: 999px;
+      background: #E2E8F0;
+      outline: none;
+    }
+    input[type="range"].ke-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #0F4C81;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(15, 76, 129, 0.35);
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    input[type="range"].ke-range::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+      background: #EA580C;
+    }
+    .barcode-bars {
+      background-image: repeating-linear-gradient(
+        to right,
+        #0F172A 0px,
+        #0F172A 2px,
+        transparent 2px,
+        transparent 4px,
+        #0F172A 4px,
+        #0F172A 5px,
+        transparent 5px,
+        transparent 8px,
+        #0F172A 8px,
+        #0F172A 11px,
+        transparent 11px,
+        transparent 13px
+      );
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-900 font-sans antialiased selection:bg-orange-100 selection:text-orange-900">
+
+  <!-- Top Navigation Header -->
+  <header id="topHeader" class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200/90">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 lg:h-18 flex items-center justify-between gap-2">
+      <!-- Clickable Brand Logo -->
+      <a href="#home" onclick="exitAdminToPublic('home')" class="flex items-center gap-2.5 shrink-0 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F4C81] to-[#1D4ED8] flex items-center justify-center text-white shadow-sm group-hover:scale-[1.03] transition">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11" />
+            <path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2" />
+            <circle cx="7" cy="18" r="2" />
+            <path d="M15 18H9" />
+            <circle cx="17" cy="18" r="2" />
+          </svg>
+        </div>
+        <div class="leading-none">
+          <div class="flex items-center gap-1">
+            <span class="font-extrabold text-base sm:text-lg tracking-tight text-[#0F4C81]">KAMAL</span>
+            <span class="font-extrabold text-base sm:text-lg tracking-tight text-[#EA580C]">ENTERPRISE</span>
+          </div>
+          <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 mt-1">Own Courier &amp; Hub Network</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-4 text-xs 2xl:text-sm font-semibold text-slate-600" aria-label="Main Navigation">
+        <button type="button" onclick="exitAdminToPublic('home')" class="hover:text-[#0F4C81] py-2 transition cursor-pointer">Home</button>
+        <button type="button" onclick="exitAdminToPublic('services-section')" class="hover:text-[#0F4C81] py-2 transition cursor-pointer">Services</button>
+        <button type="button" onclick="exitAdminToPublic('mvp-workspace', 'rate')" class="hover:text-[#0F4C81] py-2 transition cursor-pointer">MVP Suite</button>
+        <button type="button" onclick="exitAdminToPublic('mvp-workspace', 'track')" class="hover:text-[#0F4C81] py-2 transition cursor-pointer">Track &amp; Book</button>
+        <button type="button" onclick="exitAdminToPublic('franchise-network')" class="hover:text-[#0F4C81] py-2 transition cursor-pointer">Franchise</button>
+        <button type="button" onclick="openCustomerPortalOrLogin()" class="hover:text-[#0F4C81] py-2 font-bold text-[#0F4C81] transition cursor-pointer">
+          <span id="navCustomerLabel">Customer Login</span>
+        </button>
+        <button type="button" onclick="openAdminPortalOrLogin()" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-[#0F4C81] text-white font-bold transition cursor-pointer">
+          <span id="navAdminLabel">Admin Login</span>
+        </button>
+      </nav>
+
+      <!-- Header Quick Action Buttons -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onclick="openAdminPortalOrLogin()"
+          class="hidden sm:inline-flex xl:hidden items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-[#0F4C81] text-white text-xs font-bold transition cursor-pointer"
+        >
+          <span id="mobileBarAdminLabel">Admin Login</span>
+        </button>
+        <button
+          type="button"
+          onclick="exitAdminToPublic('mvp-workspace', 'pickup')"
+          class="px-3.5 sm:px-4 py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer"
+        >
+          Book Pickup
+        </button>
+        <button
+          type="button"
+          id="mobileNavBtn"
+          onclick="toggleMobileNav()"
+          aria-label="Toggle Menu"
+          class="xl:hidden p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+        >
+          <svg id="mobileOpenSvg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="mobileCloseSvg" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="hidden xl:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1">
+      <button type="button" onclick="closeMobileNav(); exitAdminToPublic('home');" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0F4C81] cursor-pointer">Home</button>
+      <button type="button" onclick="closeMobileNav(); exitAdminToPublic('services-section');" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0F4C81] cursor-pointer">Services &amp; MVP Suite</button>
+      <button type="button" onclick="closeMobileNav(); exitAdminToPublic('mvp-workspace', 'track');" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0F4C81] cursor-pointer">Track &amp; Book Pickup</button>
+      <button type="button" onclick="closeMobileNav(); exitAdminToPublic('mvp-workspace', 'rate');" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0F4C81] cursor-pointer">Pincode Rate Calculator</button>
+      <button type="button" onclick="closeMobileNav(); exitAdminToPublic('franchise-network');" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#0F4C81] cursor-pointer">Own Franchise Network</button>
+      <button type="button" onclick="closeMobileNav(); openCustomerPortalOrLogin();" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold text-[#0F4C81] hover:bg-blue-50 cursor-pointer">Customer Login / Portal</button>
+      <button type="button" onclick="closeMobileNav(); openAdminPortalOrLogin();" class="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-extrabold text-[#EA580C] hover:bg-orange-50 cursor-pointer">Admin User Login / Operations Portal</button>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- ADMIN OPERATIONS PORTAL (SHOWN WHEN ADMIN IS LOGGED IN)                -->
+  <!-- ===================================================================== -->
+  <section id="adminPortalSection" class="hidden min-h-screen bg-[#F1F5F9] pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <!-- Admin Top Banner -->
+      <div class="rounded-2xl bg-gradient-to-r from-[#0A3357] via-[#0F4C81] to-[#13548E] text-white p-5 sm:p-6 shadow-card mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-[#EA580C] text-white text-[11px] font-extrabold uppercase tracking-wider">
+              Admin Operations Portal
+            </span>
+            <span id="adminSessionBadge" class="px-2.5 py-0.5 rounded-full bg-white/15 text-blue-100 text-xs font-semibold">
+              Super Admin • All Hubs
+            </span>
+          </div>
+          <h1 id="adminWelcomeTitle" class="text-xl sm:text-2xl font-extrabold tracking-tight">
+            Kamal Enterprise — Command &amp; Parcel Control Center
+          </h1>
+          <p class="text-xs sm:text-sm text-blue-100">
+            Apna khud ka courier operations &amp; tracking engine — create running parcels, scan/lookup barcodes, manage status flow, assign riders, settle COD &amp; expand franchise hubs.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+          <button type="button" onclick="switchAdminSection('create')" class="px-4 py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+            + Create Running Parcel
+          </button>
+          <button type="button" onclick="exitAdminToPublic('home')" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-bold transition cursor-pointer">
+            View Public Site
+          </button>
+          <button type="button" onclick="logoutAdminSession()" class="px-4 py-2.5 rounded-xl bg-slate-950/50 hover:bg-slate-950 text-red-200 hover:text-white border border-white/15 text-xs sm:text-sm font-bold transition cursor-pointer">
+            Logout Admin
+          </button>
+        </div>
+      </div>
+
+      <!-- Admin Layout: Left Sidebar Navigation + Main Workspace -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Admin Sidebar / Mobile Scroll Tabs (3 cols) -->
+        <aside class="lg:col-span-3 rounded-2xl bg-white border border-slate-200 shadow-card p-3 space-y-1 lg:sticky lg:top-22">
+          <div class="px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Operations Modules</div>
+          <button type="button" id="admNav-overview" onclick="switchAdminSection('overview')" class="admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between transition cursor-pointer"></button>
+          <button type="button" id="admNav-create" onclick="switchAdminSection('create')" class="admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between transition cursor-pointer"></button>
+          <button type="button" id="admNav-barcode" onclick="switchAdminSection('barcode')" class="admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between transition cursor-pointer"></button>
+          <button type="button" id="admNav-manage" onclick="switchAdminSection('manage')" class="admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between transition cursor-pointer"></button>
+          <button type="button" id="admNav-dispatch" onclick="switchAdminSection('dispatch')" class="admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between transition cursor-pointer"></button>
+          <button type="button" id="admNav-cod" onclick="switchAdminSection('cod')" class="admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between transition cursor-pointer"></button>
+          <button type="button" id="admNav-franchise" onclick="switchAdminSection('franchise')" class="admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between transition cursor-pointer"></button>
+
+          <div class="mt-3 pt-3 border-t border-slate-100 px-3 py-2 rounded-xl bg-blue-50/60 text-[11px] text-slate-600 space-y-1">
+            <div class="font-bold text-[#0F4C81]">Live State Sync Active</div>
+            <div>Changes in Admin Portal sync instantly with Customer Track &amp; Portal.</div>
+          </div>
+        </aside>
+
+        <!-- Admin Main Panel (9 cols) -->
+        <div class="lg:col-span-9 space-y-6">
+          <!-- 1. OVERVIEW & KPIs -->
+          <div id="admPanel-overview" class="space-y-6">
+            <div id="adminKpiGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <!-- Populated via JS -->
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div class="lg:col-span-7 rounded-2xl bg-white border border-slate-200 shadow-card p-5 space-y-4">
+                <div class="flex items-center justify-between">
+                  <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Recent Running Parcels</h2>
+                  <button type="button" onclick="switchAdminSection('manage')" class="text-xs font-bold text-[#0F4C81] hover:underline cursor-pointer">
+                    Manage All →
+                  </button>
+                </div>
+                <div id="adminRecentParcelsList" class="divide-y divide-slate-100">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 rounded-2xl bg-white border border-slate-200 shadow-card p-5 space-y-4">
+                <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Quick Barcode Lookup</h2>
+                <p class="text-xs text-slate-500">Enter barcode or AWB to inspect &amp; update status immediately.</p>
+                <form onsubmit="handleAdminOverviewBarcodeSearch(event)" class="flex gap-2">
+                  <label for="adminQuickBarcodeInput" class="sr-only">Barcode or AWB</label>
+                  <input id="adminQuickBarcodeInput" type="text" placeholder="e.g. KEBC100201" class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-sm font-mono font-bold uppercase focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-xs font-bold cursor-pointer">
+                    Find
+                  </button>
+                </form>
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  <button type="button" onclick="openAdminBarcodeWithCode('KEBC100201')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#0F4C81] text-xs font-mono font-bold cursor-pointer">KEBC100201</button>
+                  <button type="button" onclick="openAdminBarcodeWithCode('KEBC100202')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#0F4C81] text-xs font-mono font-bold cursor-pointer">KEBC100202</button>
+                  <button type="button" onclick="openAdminBarcodeWithCode('KEBC100203')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#0F4C81] text-xs font-mono font-bold cursor-pointer">KEBC100203</button>
+                  <button type="button" onclick="openAdminBarcodeWithCode('KEBC100204')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#0F4C81] text-xs font-mono font-bold cursor-pointer">KEBC100204</button>
+                </div>
+                <div class="pt-3 border-t border-slate-100 space-y-2">
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Latest Operations Log</div>
+                  <div id="adminActivityLog" class="space-y-2 text-xs">
+                    <!-- Populated via JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. CREATE RUNNING PARCEL -->
+          <div id="admPanel-create" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <form id="adminCreateParcelForm" onsubmit="handleAdminCreateParcel(event)" class="lg:col-span-8 rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-5">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-4">
+                  <div>
+                    <h2 class="text-xl font-extrabold text-slate-900">Create Running Parcel</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Issue a live barcode &amp; AWB, assign hub/rider, and start tracking immediately.</p>
+                  </div>
+                  <button type="button" onclick="prefillAdminParcelForm()" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#0F4C81] text-xs font-bold cursor-pointer">
+                    Fill Sample Parcel
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Sender Details</div>
+                    <div>
+                      <label for="admSenderName" class="block text-xs font-bold text-slate-700 mb-1">Sender Name / Firm</label>
+                      <input id="admSenderName" type="text" required placeholder="e.g. Kamal Traders" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <label for="admSenderPhone" class="block text-xs font-bold text-slate-700 mb-1">Phone</label>
+                        <input id="admSenderPhone" type="tel" required placeholder="9829011122" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                      </div>
+                      <div>
+                        <label for="admOriginPin" class="block text-xs font-bold text-slate-700 mb-1">Origin Pin</label>
+                        <input id="admOriginPin" type="text" maxlength="6" required value="302001" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                      </div>
+                    </div>
+                    <div>
+                      <label for="admOriginCity" class="block text-xs font-bold text-slate-700 mb-1">Origin City / Hub</label>
+                      <input id="admOriginCity" type="text" required value="Jaipur Hub" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                    </div>
+                  </div>
+
+                  <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-[#EA580C]">Receiver Details</div>
+                    <div>
+                      <label for="admReceiverName" class="block text-xs font-bold text-slate-700 mb-1">Receiver Name / Store</label>
+                      <input id="admReceiverName" type="text" required placeholder="e.g. Verma Electronics" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <label for="admReceiverPhone" class="block text-xs font-bold text-slate-700 mb-1">Phone</label>
+                        <input id="admReceiverPhone" type="tel" required placeholder="9820122233" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                      </div>
+                      <div>
+                        <label for="admDestPin" class="block text-xs font-bold text-slate-700 mb-1">Dest Pin</label>
+                        <input id="admDestPin" type="text" maxlength="6" required value="400001" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                      </div>
+                    </div>
+                    <div>
+                      <label for="admDestCity" class="block text-xs font-bold text-slate-700 mb-1">Destination City / Hub</label>
+                      <input id="admDestCity" type="text" required value="Mumbai Hub" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                  <div>
+                    <label for="admWeightKg" class="block text-xs font-bold text-slate-700 mb-1">Weight (kg)</label>
+                    <input id="admWeightKg" type="number" min="0.1" max="500" step="0.1" required value="3.5" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                  </div>
+                  <div>
+                    <label for="admServiceMode" class="block text-xs font-bold text-slate-700 mb-1">Service Type</label>
+                    <select id="admServiceMode" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]">
+                      <option value="surface">Surface Standard</option>
+                      <option value="air">Express Air</option>
+                      <option value="express">Priority Express</option>
+                      <option value="sameday">Same-Day Local</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="admPaymentMode" class="block text-xs font-bold text-slate-700 mb-1">Payment Mode</label>
+                    <select id="admPaymentMode" onchange="toggleAdminCodField()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]">
+                      <option value="Prepaid">Prepaid</option>
+                      <option value="COD">COD (Cash on Delivery)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="admCodAmount" class="block text-xs font-bold text-slate-700 mb-1">COD Amount (₹)</label>
+                    <input id="admCodAmount" type="number" min="0" max="500000" step="10" value="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                  <div>
+                    <label for="admBarcodeInput" class="block text-xs font-bold text-slate-700 mb-1">Barcode / AWB (Auto or Custom)</label>
+                    <input id="admBarcodeInput" type="text" placeholder="Auto e.g. KEBC100205" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-mono font-bold uppercase focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                  </div>
+                  <div>
+                    <label for="admRiderSelect" class="block text-xs font-bold text-slate-700 mb-1">Assign Rider</label>
+                    <select id="admRiderSelect" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]">
+                      <!-- Populated via JS -->
+                    </select>
+                  </div>
+                  <div>
+                    <label for="admInitialStatus" class="block text-xs font-bold text-slate-700 mb-1">Initial Status</label>
+                    <select id="admInitialStatus" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]">
+                      <!-- Populated via JS -->
+                    </select>
+                  </div>
+                </div>
+
+                <div class="pt-2 flex justify-end">
+                  <button type="submit" class="px-6 py-3 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-sm font-extrabold shadow-xs transition cursor-pointer">
+                    Create Parcel &amp; Generate Barcode
+                  </button>
+                </div>
+              </form>
+
+              <!-- Right Barcode & AWB Slip Preview (4 cols) -->
+              <div id="adminCreatedBarcodeCard" class="lg:col-span-4 rounded-2xl bg-white border border-slate-200 shadow-card p-5 space-y-4">
+                <div class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Barcode &amp; AWB Slip Output</div>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  Create a running parcel to generate a scannable barcode label, AWB number, tariff summary, and instant tracking shortcut.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. BARCODE / AWB LOOKUP & INSTANT STATUS INSPECTOR -->
+          <div id="admPanel-barcode" class="hidden space-y-6">
+            <div class="rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-5">
+              <div>
+                <h2 class="text-xl font-extrabold text-slate-900">Barcode / AWB Lookup &amp; Instant Status Inspector</h2>
+                <p class="text-xs sm:text-sm text-slate-500">
+                  Enter or paste any barcode value or AWB number (e.g. <strong class="font-mono">KEBC100201</strong>) to inspect full parcel details and update status in real time.
+                </p>
+              </div>
+
+              <form onsubmit="handleAdminBarcodeInspectorForm(event)" class="flex flex-col sm:flex-row gap-2.5">
+                <label for="adminInspectorInput" class="sr-only">Enter Barcode or AWB</label>
+                <input
+                  id="adminInspectorInput"
+                  type="text"
+                  value="KEBC100201"
+                  placeholder="Enter Barcode value or AWB (e.g. KEBC100201)..."
+                  class="flex-1 px-4 py-3 rounded-xl border border-slate-300 text-sm sm:text-base font-mono font-extrabold uppercase focus:outline-none focus:ring-2 focus:ring-[#0F4C81]"
+                />
+                <button type="submit" class="px-6 py-3 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-sm font-bold shrink-0 cursor-pointer">
+                  Lookup Parcel
+                </button>
+              </form>
+
+              <div id="adminBarcodeQuickChips" class="flex flex-wrap items-center gap-2">
+                <!-- Populated via JS -->
+              </div>
+
+              <div id="adminBarcodeInspectorResult" class="pt-2">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. MANAGE PARCEL TRACKING & STATUS WORKFLOW -->
+          <div id="admPanel-manage" class="hidden space-y-6">
+            <div class="rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-5">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                <div>
+                  <h2 class="text-xl font-extrabold text-slate-900">Manage Parcel Tracking &amp; Status Workflow</h2>
+                  <p class="text-xs sm:text-sm text-slate-500">Filter parcels, advance/set status stages, log hub/remarks, and print/view barcode slips.</p>
+                </div>
+                <button type="button" onclick="switchAdminSection('create')" class="px-4 py-2 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-xs font-bold shrink-0 cursor-pointer">
+                  + New Parcel
+                </button>
+              </div>
+
+              <!-- Filter Controls -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div>
+                  <label for="admFilterSearch" class="block text-xs font-bold text-slate-600 mb-1">Search Barcode / AWB / City / Party</label>
+                  <input id="admFilterSearch" type="text" oninput="renderAdminManageTable()" placeholder="Type barcode, AWB, city or name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                </div>
+                <div>
+                  <label for="admFilterStatus" class="block text-xs font-bold text-slate-600 mb-1">Filter by Status</label>
+                  <select id="admFilterStatus" onchange="renderAdminManageTable()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]">
+                    <option value="ALL">All Statuses</option>
+                    <!-- Populated via JS -->
+                  </select>
+                </div>
+                <div>
+                  <label for="admFilterPayment" class="block text-xs font-bold text-slate-600 mb-1">Filter by Payment Mode</label>
+                  <select id="admFilterPayment" onchange="renderAdminManageTable()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]">
+                    <option value="ALL">All (Prepaid &amp; COD)</option>
+                    <option value="Prepaid">Prepaid</option>
+                    <option value="COD">COD</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Parcels Table -->
+              <div class="overflow-x-auto rounded-xl border border-slate-200">
+                <table class="w-full text-left border-collapse min-w-[780px]">
+                  <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500">
+                      <th class="py-3 px-3 font-bold">Barcode / AWB</th>
+                      <th class="py-3 px-3 font-bold">Route &amp; Parties</th>
+                      <th class="py-3 px-3 font-bold">Mode / COD</th>
+                      <th class="py-3 px-3 font-bold">Status</th>
+                      <th class="py-3 px-3 font-bold">Update Status</th>
+                      <th class="py-3 px-3 font-bold text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminManageTableBody" class="divide-y divide-slate-100 bg-white text-xs sm:text-sm">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. RIDER & HUB DISPATCH MANAGEMENT -->
+          <div id="admPanel-dispatch" class="hidden space-y-6">
+            <div class="rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-5">
+              <div>
+                <h2 class="text-xl font-extrabold text-slate-900">Rider &amp; Hub Dispatch Management</h2>
+                <p class="text-xs sm:text-sm text-slate-500">Toggle rider duty status, assign riders/hubs to running parcels, and dispatch selected shipments.</p>
+              </div>
+
+              <!-- Riders Grid -->
+              <div id="adminRidersGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Populated via JS -->
+              </div>
+
+              <!-- Parcel Assignment Table -->
+              <div class="pt-2 space-y-3">
+                <h3 class="text-sm font-extrabold uppercase tracking-wider text-[#0F4C81]">Assign Rider &amp; Hub to Running Parcels</h3>
+                <div id="adminDispatchAssignments" class="space-y-2.5">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. COD & BILLING / RATE RULES MANAGEMENT -->
+          <div id="admPanel-cod" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <!-- COD Remittance Ledger (7 cols) -->
+              <div class="lg:col-span-7 rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">COD Collection &amp; Remittance</h2>
+                    <p class="text-xs text-slate-500">Track COD parcels and mark collected cash as settled.</p>
+                  </div>
+                  <div id="adminCodSummaryBadge" class="px-3 py-1.5 rounded-xl bg-orange-50 border border-orange-200 text-[#EA580C] text-xs font-extrabold">
+                    <!-- Populated via JS -->
+                  </div>
+                </div>
+                <div id="adminCodList" class="divide-y divide-slate-100">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+
+              <!-- Dynamic Rate Rules Editor (5 cols) -->
+              <form onsubmit="handleSaveRateRules(event)" class="lg:col-span-5 rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-4">
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-900">Tariff &amp; Rate Rules (INR ₹)</h2>
+                  <p class="text-xs text-slate-500">Adjust base fare, per-kg slab, and COD %; updates apply immediately across the app.</p>
+                </div>
+
+                <div>
+                  <label for="ruleBaseFare" class="block text-xs font-bold text-slate-700 mb-1">Base Fare — National Route (₹)</label>
+                  <input id="ruleBaseFare" type="number" min="20" max="500" step="5" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold" />
+                </div>
+                <div>
+                  <label for="rulePerKg" class="block text-xs font-bold text-slate-700 mb-1">Per Kg Surface Rate (₹/kg)</label>
+                  <input id="rulePerKg" type="number" min="5" max="200" step="1" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold" />
+                </div>
+                <div>
+                  <label for="ruleExpressMult" class="block text-xs font-bold text-slate-700 mb-1">Express / Air Multiplier (e.g. 1.45)</label>
+                  <input id="ruleExpressMult" type="number" min="1.1" max="3.0" step="0.05" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold" />
+                </div>
+                <div>
+                  <label for="ruleCodPct" class="block text-xs font-bold text-slate-700 mb-1">COD Fee Percentage (%)</label>
+                  <input id="ruleCodPct" type="number" min="0" max="10" step="0.1" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold" />
+                </div>
+
+                <div id="rateRuleFeedback" class="hidden rounded-xl p-3 text-xs font-bold bg-emerald-50 border border-emerald-200 text-emerald-800"></div>
+
+                <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-sm font-bold transition cursor-pointer">
+                  Save &amp; Apply Rate Rules
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- 7. FRANCHISE & PIN-CODE SERVICEABILITY CONTROL -->
+          <div id="admPanel-franchise" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <!-- Pincode Serviceability (6 cols) -->
+              <div class="lg:col-span-6 rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-4">
+                <h2 class="text-lg font-extrabold text-slate-900">Serviceable Pin Codes &amp; Hubs</h2>
+                <form onsubmit="handleAddServicePin(event)" class="flex gap-2">
+                  <label for="newServicePin" class="sr-only">Pin Code</label>
+                  <input id="newServicePin" type="text" maxlength="6" required placeholder="6-digit Pin (e.g. 411001)" class="w-36 px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold" />
+                  <label for="newServiceCity" class="sr-only">City / Hub</label>
+                  <input id="newServiceCity" type="text" required placeholder="City / Hub Name" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-sm" />
+                  <button type="submit" class="px-4 py-2 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-xs font-bold shrink-0 cursor-pointer">
+                    Add Pin
+                  </button>
+                </form>
+                <div id="adminServicePinsList" class="space-y-2 max-h-80 overflow-y-auto">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+
+              <!-- Franchise Applications (6 cols) -->
+              <div class="lg:col-span-6 rounded-2xl bg-white border border-slate-200 shadow-card p-6 space-y-4">
+                <h2 class="text-lg font-extrabold text-slate-900">Own Franchise Partner Applications</h2>
+                <p class="text-xs text-slate-500">Review partner inquiries and approve/hold upcoming Kamal Enterprise franchise hubs.</p>
+                <div id="adminFranchiseAppsList" class="space-y-3">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- PUBLIC COURIER HOME PAGE & CUSTOMER MVP VIEW                           -->
+  <!-- ===================================================================== -->
+  <div id="publicSiteWrapper">
+    <main>
+      <!-- Hero Section -->
+      <section id="home" class="relative overflow-hidden bg-gradient-to-b from-[#0F4C81] via-[#0D416E] to-[#082B4A] text-white pt-11 pb-16 sm:pt-16 sm:pb-22">
+        <div class="pointer-events-none absolute -top-24 right-0 w-96 h-96 rounded-full bg-orange-500/15 blur-3xl"></div>
+        <div class="pointer-events-none absolute -bottom-24 -left-16 w-96 h-96 rounded-full bg-blue-400/15 blur-3xl"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <!-- Left Hero Messaging & Instant AWB / Barcode Tracking -->
+            <div class="lg:col-span-7 space-y-5">
+              <div class="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-blue-100 text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-[#F97316]"></span>
+                KAMAL ENTERPRISE • OWN COURIER BRAND, LIVE BARCODE TRACKING &amp; FUTURE FRANCHISE
+              </div>
+
+              <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12]">
+                Apna Khud Ka Courier &amp; Parcel Network — <span class="text-[#F97316]">Fast, Trackable &amp; Scalable</span>
+              </h1>
+
+              <p class="text-base sm:text-lg text-blue-100/90 max-w-2xl leading-relaxed">
+                Instead of paying ongoing third-party franchise royalties, <strong class="text-white">Kamal Enterprise</strong> runs its own pickup booking, barcode/AWB tracking, rider Proof of Delivery (POD), COD settlement, and future own-franchise hub network across India.
+              </p>
+
+              <!-- Instant AWB / Barcode Search Bar -->
+              <div class="bg-white rounded-2xl p-2.5 sm:p-3 shadow-float text-slate-900">
+                <form onsubmit="handleHeroQuickTrack(event)" class="flex flex-col sm:flex-row gap-2.5">
+                  <div class="flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 focus-within:border-[#0F4C81] focus-within:ring-2 focus-within:ring-blue-100">
+                    <svg class="w-5 h-5 text-[#0F4C81] shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+                    </svg>
+                    <label for="heroAwbInput" class="sr-only">Enter Barcode or AWB Number</label>
+                    <input
+                      id="heroAwbInput"
+                      type="text"
+                      placeholder="Enter Barcode or AWB (e.g. KEBC100201)"
+                      class="w-full bg-transparent text-sm sm:text-base font-mono font-bold text-slate-900 uppercase placeholder:font-sans placeholder:normal-case placeholder:font-medium placeholder:text-slate-400 focus:outline-none"
+                    />
+                  </div>
+                  <button type="submit" class="px-5 py-3 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-sm font-bold shrink-0 transition cursor-pointer">
+                    Track Parcel
+                  </button>
+                  <button type="button" onclick="navigateToSection('mvp-workspace', 'pickup')" class="px-5 py-3 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-sm font-bold shrink-0 transition cursor-pointer">
+                    Book Pickup
+                  </button>
+                </form>
+
+                <div class="flex flex-wrap items-center gap-2 px-2 pt-2.5 text-xs text-slate-500">
+                  <span class="font-semibold text-slate-600">Sample Barcodes:</span>
+                  <button type="button" onclick="quickTrackSample('KEBC100201')" class="px-2.5 py-0.5 rounded-md bg-blue-50 hover:bg-blue-100 text-[#0F4C81] font-mono font-bold cursor-pointer">KEBC100201</button>
+                  <button type="button" onclick="quickTrackSample('KEBC100202')" class="px-2.5 py-0.5 rounded-md bg-orange-50 hover:bg-orange-100 text-[#EA580C] font-mono font-bold cursor-pointer">KEBC100202</button>
+                  <button type="button" onclick="quickTrackSample('KEBC100203')" class="px-2.5 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono font-bold cursor-pointer">KEBC100203</button>
+                  <button type="button" onclick="quickTrackSample('KEBC100204')" class="px-2.5 py-0.5 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-mono font-bold cursor-pointer">KEBC100204</button>
+                </div>
+              </div>
+
+              <!-- Key Operational Highlights -->
+              <div class="grid grid-cols-3 gap-3 sm:gap-5 pt-1">
+                <div class="rounded-xl bg-white/10 border border-white/15 p-3.5">
+                  <div class="text-lg sm:text-2xl font-extrabold text-white">100% Own</div>
+                  <div class="text-[11px] sm:text-xs text-blue-100">Brand &amp; Customer Data</div>
+                </div>
+                <div class="rounded-xl bg-white/10 border border-white/15 p-3.5">
+                  <div class="text-lg sm:text-2xl font-extrabold text-[#F97316]">Barcode + POD</div>
+                  <div class="text-[11px] sm:text-xs text-blue-100">Live Scan &amp; OTP Delivery</div>
+                </div>
+                <div class="rounded-xl bg-white/10 border border-white/15 p-3.5">
+                  <div class="text-lg sm:text-2xl font-extrabold text-white">Own Franchise</div>
+                  <div class="text-[11px] sm:text-xs text-blue-100">Expand City Hubs Later</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Hero Instant Rate & Dispatch Desk -->
+            <div class="lg:col-span-5">
+              <div class="rounded-2xl bg-white text-slate-900 p-6 shadow-float border border-slate-100 space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <div>
+                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#EA580C]">Instant Tariff &amp; Dispatch</span>
+                    <h2 class="text-lg font-extrabold text-slate-900 mt-0.5">Quick Quote &amp; Booking</h2>
+                  </div>
+                  <button type="button" onclick="openAdminPortalOrLogin()" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-800 hover:text-[#0F4C81] text-xs font-bold transition cursor-pointer">
+                    Admin Console →
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label for="heroOriginPin" class="block text-xs font-bold text-slate-600 mb-1">Origin Pin</label>
+                    <input id="heroOriginPin" type="text" maxlength="6" value="302001" oninput="updateHeroQuickEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                  </div>
+                  <div>
+                    <label for="heroDestPin" class="block text-xs font-bold text-slate-600 mb-1">Destination Pin</label>
+                    <input id="heroDestPin" type="text" maxlength="6" value="400001" oninput="updateHeroQuickEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs font-bold mb-1.5">
+                    <span class="text-slate-600">Parcel Weight</span>
+                    <span id="heroWeightText" class="text-[#0F4C81]">2.5 kg</span>
+                  </div>
+                  <input id="heroWeightRange" type="range" min="0.5" max="30" step="0.5" value="2.5" oninput="updateHeroQuickEstimate()" class="ke-range w-full" />
+                </div>
+
+                <div id="heroQuickEstimateCard" class="rounded-xl bg-[#EFF6FF] border border-blue-200/80 p-4 flex items-center justify-between">
+                  <!-- Populated via JS -->
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                  <button type="button" onclick="applyHeroEstimateToBooking()" class="py-2.5 px-3 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-xs sm:text-sm font-bold transition cursor-pointer">
+                    Book This Parcel
+                  </button>
+                  <button type="button" onclick="navigateToSection('mvp-workspace', 'rate')" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-bold transition cursor-pointer">
+                    Full Rate Calc
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- CLICKABLE SERVICES & MVP SUITE MODULES                              -->
+      <!-- ================================================================= -->
+      <section id="services-section" class="py-14 sm:py-20 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div class="max-w-3xl space-y-2">
+              <span class="text-xs font-extrabold uppercase tracking-widest text-[#0F4C81]">Courier Services &amp; MVP Suite</span>
+              <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Everything Needed to Run <span class="text-[#EA580C]">Kamal Enterprise</span> Independently
+              </h2>
+              <p class="text-slate-600 text-sm sm:text-base">
+                Click any module below to inspect its workflow, operational benefits, and launch the live action or modal.
+              </p>
+            </div>
+          </div>
+
+          <div id="servicesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            <!-- Populated via JS -->
+          </div>
+
+          <div id="serviceDetailBox" class="mt-8 rounded-2xl bg-[#F8FAFC] border-2 border-[#0F4C81]/20 p-6 sm:p-7">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- INTERACTIVE CUSTOMER MVP SUITE (TRACK, BOOK, RATE, CUSTOMER LOGIN)  -->
+      <!-- ================================================================= -->
+      <section id="mvp-workspace" class="py-14 sm:py-20 bg-[#F8FAFC] border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-widest text-[#EA580C]">Interactive Courier MVP</span>
+              <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1">
+                Track Barcode/AWB, Book Pickup, Check Rates &amp; Customer Portal
+              </h2>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-600 max-w-md">
+              Every pickup booked here or created in the Admin Portal is immediately available in live tracking.
+            </p>
+          </div>
+
+          <!-- 4 MVP Mode Tabs -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 bg-white p-2 rounded-2xl border border-slate-200 shadow-xs mb-8" role="tablist">
+            <button type="button" role="tab" id="mvpTab-track" aria-selected="true" onclick="switchMvpTab('track')" class="py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
+              1. Track Barcode / AWB
+            </button>
+            <button type="button" role="tab" id="mvpTab-pickup" aria-selected="false" onclick="switchMvpTab('pickup')" class="py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
+              2. Book Pickup
+            </button>
+            <button type="button" role="tab" id="mvpTab-rate" aria-selected="false" onclick="switchMvpTab('rate')" class="py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
+              3. Pincode Rate &amp; COD
+            </button>
+            <button type="button" role="tab" id="mvpTab-account" aria-selected="false" onclick="switchMvpTab('account')" class="py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer">
+              4. Customer Portal
+            </button>
+          </div>
+
+          <!-- TAB 1: TRACK BARCODE / AWB -->
+          <div id="mvpPanel-track" class="space-y-6">
+            <div class="rounded-2xl bg-white border border-slate-200 shadow-card p-5 sm:p-7 space-y-5">
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                <div>
+                  <h3 class="text-xl font-extrabold text-slate-900">Live Parcel Barcode &amp; AWB Tracker</h3>
+                  <p class="text-xs sm:text-sm text-slate-500">Search sample barcodes (<strong class="font-mono">KEBC100201</strong> to <strong class="font-mono">KEBC100204</strong>) or any newly created barcode/AWB.</p>
+                </div>
+                <form onsubmit="handleMvpTrackForm(event)" class="flex gap-2 w-full lg:w-auto">
+                  <label for="mvpTrackInput" class="sr-only">Barcode or AWB</label>
+                  <input id="mvpTrackInput" type="text" value="KEBC100201" placeholder="Enter Barcode or AWB..." class="flex-1 lg:w-64 px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-mono font-extrabold uppercase focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+                  <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-sm font-bold shrink-0 cursor-pointer">
+                    Track
+                  </button>
+                </form>
+              </div>
+
+              <div id="mvpSampleBarcodeRow" class="flex flex-wrap items-center gap-2">
+                <!-- Populated via JS -->
+              </div>
+
+              <div id="mvpTrackingResult">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: BOOK PICKUP -->
+          <div id="mvpPanel-pickup" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+              <form id="customerPickupForm" onsubmit="handleCustomerPickupSubmit(event)" class="lg:col-span-8 rounded-2xl bg-white border border-slate-200 shadow-card p-6 sm:p-8 space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-4">
+                  <div>
+                    <h3 class="text-xl font-extrabold text-slate-900">Book Doorstep Courier Pickup</h3>
+                    <p class="text-xs sm:text-sm text-slate-500">Generates a live Barcode &amp; AWB synced with Customer Tracking and Admin Operations.</p>
+                  </div>
+                  <button type="button" onclick="prefillCustomerPickupForm()" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#0F4C81] text-xs font-bold cursor-pointer">
+                    Fill Sample Details
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Pickup / Sender</div>
+                    <div>
+                      <label for="custSenderName" class="block text-xs font-bold text-slate-700 mb-1">Sender Name / Business</label>
+                      <input id="custSenderName" type="text" required placeholder="e.g. Sharma Handlooms" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <label for="custSenderPhone" class="block text-xs font-bold text-slate-700 mb-1">Phone</label>
+                        <input id="custSenderPhone" type="tel" required placeholder="9829012345" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+                      </div>
+                      <div>
+                        <label for="custPickupPin" class="block text-xs font-bold text-slate-700 mb-1">Pickup Pin</label>
+                        <input id="custPickupPin" type="text" maxlength="6" required value="302001" oninput="updateCustomerBookingEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm font-bold" />
+                      </div>
+                    </div>
+                    <div>
+                      <label for="custPickupAddress" class="block text-xs font-bold text-slate-700 mb-1">Pickup Address &amp; City</label>
+                      <input id="custPickupAddress" type="text" required placeholder="MI Road, Jaipur" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+                    </div>
+                  </div>
+
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-[#EA580C]">Delivery / Receiver</div>
+                    <div>
+                      <label for="custReceiverName" class="block text-xs font-bold text-slate-700 mb-1">Receiver Name / Store</label>
+                      <input id="custReceiverName" type="text" required placeholder="e.g. Neha Boutique" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                      <div>
+                        <label for="custReceiverPhone" class="block text-xs font-bold text-slate-700 mb-1">Phone</label>
+                        <input id="custReceiverPhone" type="tel" required placeholder="9820198765" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+                      </div>
+                      <div>
+                        <label for="custDropPin" class="block text-xs font-bold text-slate-700 mb-1">Delivery Pin</label>
+                        <input id="custDropPin" type="text" maxlength="6" required value="400001" oninput="updateCustomerBookingEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm font-bold" />
+                      </div>
+                    </div>
+                    <div>
+                      <label for="custDropAddress" class="block text-xs font-bold text-slate-700 mb-1">Delivery Address &amp; City</label>
+                      <input id="custDropAddress" type="text" required placeholder="Colaba, Mumbai" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
+                    <label for="custWeight" class="block text-xs font-bold text-slate-700 mb-1">Weight (kg)</label>
+                    <input id="custWeight" type="number" min="0.2" max="200" step="0.1" value="2.0" required oninput="updateCustomerBookingEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold" />
+                  </div>
+                  <div>
+                    <label for="custMode" class="block text-xs font-bold text-slate-700 mb-1">Service Mode</label>
+                    <select id="custMode" onchange="updateCustomerBookingEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold bg-white">
+                      <option value="surface">Surface Standard</option>
+                      <option value="air">Express Air</option>
+                      <option value="express">Priority Express</option>
+                      <option value="sameday">Same-Day Local</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="custPayType" class="block text-xs font-bold text-slate-700 mb-1">Payment Type</label>
+                    <select id="custPayType" onchange="updateCustomerBookingEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold bg-white">
+                      <option value="Prepaid">Prepaid</option>
+                      <option value="COD">COD</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="custCodAmt" class="block text-xs font-bold text-slate-700 mb-1">COD Amount (₹)</label>
+                    <input id="custCodAmt" type="number" min="0" max="200000" step="50" value="0" oninput="updateCustomerBookingEstimate()" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold" />
+                  </div>
+                </div>
+
+                <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100">
+                  <span class="text-xs text-slate-500">Includes instant barcode/AWB slip &amp; OTP/Photo POD tracking.</span>
+                  <button type="submit" class="px-6 py-3 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-sm font-extrabold transition cursor-pointer">
+                    Confirm Pickup &amp; Issue Barcode
+                  </button>
+                </div>
+              </form>
+
+              <div class="lg:col-span-4 space-y-5">
+                <div class="rounded-2xl bg-[#0F4C81] text-white p-6 shadow-card space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-blue-200">Estimated Fare</span>
+                    <span id="custEtaBadge" class="px-2.5 py-0.5 rounded-full bg-white/15 text-xs font-bold">3–5 Days</span>
+                  </div>
+                  <div id="custTotalFare" class="text-3xl font-extrabold">₹125</div>
+                  <div id="custFareBreakdown" class="text-xs text-blue-100 space-y-1 border-t border-white/15 pt-3"></div>
+                </div>
+
+                <div id="custBookingReceipt" class="rounded-2xl bg-white border border-slate-200 shadow-card p-5 space-y-3">
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-[#EA580C]">Generated Barcode Slip</div>
+                  <p class="text-xs text-slate-600">Submit pickup details to generate a live barcode &amp; AWB number.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: PINCODE RATE & COD CALCULATOR -->
+          <div id="mvpPanel-rate" class="hidden">
+            <div class="rounded-2xl bg-white border border-slate-200 shadow-card p-6 sm:p-8 space-y-6">
+              <div>
+                <h3 class="text-xl font-extrabold text-slate-900">Pincode Serviceability, Mode &amp; COD Rate Calculator (INR ₹)</h3>
+                <p class="text-xs sm:text-sm text-slate-500">Compare Surface, Express Air, Priority Express, and Same-Day rates with Prepaid or COD.</p>
+              </div>
+
+              <form onsubmit="handleRateCalcSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5 items-end bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200">
+                <div>
+                  <label for="rateOriginPin" class="block text-xs font-bold text-slate-700 mb-1">Origin Pin</label>
+                  <input id="rateOriginPin" type="text" maxlength="6" required value="302001" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-bold" />
+                </div>
+                <div>
+                  <label for="rateDestPin" class="block text-xs font-bold text-slate-700 mb-1">Destination Pin</label>
+                  <input id="rateDestPin" type="text" maxlength="6" required value="110001" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-bold" />
+                </div>
+                <div>
+                  <label for="rateWeight" class="block text-xs font-bold text-slate-700 mb-1">Weight (kg)</label>
+                  <input id="rateWeight" type="number" min="0.2" max="200" step="0.1" required value="2.5" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-bold" />
+                </div>
+                <div>
+                  <label for="ratePayType" class="block text-xs font-bold text-slate-700 mb-1">Payment Type</label>
+                  <select id="ratePayType" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-bold">
+                    <option value="Prepaid">Prepaid</option>
+                    <option value="COD">COD</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="rateCodAmt" class="block text-xs font-bold text-slate-700 mb-1">COD Value (₹)</label>
+                  <input id="rateCodAmt" type="number" min="0" max="200000" step="100" value="1500" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-bold" />
+                </div>
+                <div>
+                  <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-sm font-bold cursor-pointer">
+                    Calculate Quote
+                  </button>
+                </div>
+              </form>
+
+              <div id="rateResultsGrid" class="space-y-4">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: CUSTOMER PORTAL -->
+          <div id="mvpPanel-account" class="hidden">
+            <div id="customerPortalContainer" class="rounded-2xl bg-white border border-slate-200 shadow-card p-6 sm:p-8">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- OWN FRANCHISE NETWORK SECTION                                      -->
+      <!-- ================================================================= -->
+      <section id="franchise-network" class="py-16 sm:py-20 bg-gradient-to-br from-[#0A3357] via-[#0F4C81] to-[#13548E] text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-7 space-y-5">
+              <span class="inline-block px-3 py-1 rounded-full bg-orange-500/20 border border-orange-300/30 text-orange-200 text-xs font-extrabold uppercase tracking-wider">
+                Own Franchise Expansion Model
+              </span>
+              <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                Start Your Own Courier Brand Today — <span class="text-[#F97316]">Launch Your Own Franchise Hubs Tomorrow</span>
+              </h2>
+              <p class="text-sm sm:text-base text-blue-100 leading-relaxed">
+                With <strong class="text-white">Kamal Enterprise</strong>’s own platform, you build equity in your own brand and later onboard local pickup centres and city franchise partners using your own barcode/AWB system, rider POD workflow, and hub rules.
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div class="p-4 rounded-xl bg-white/10 border border-white/15">
+                  <div class="text-sm font-extrabold text-white">Zero Third-Party Lock-In</div>
+                  <p class="text-xs text-blue-100 mt-1">Keep full pricing control, customer data &amp; brand identity.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-white/10 border border-white/15">
+                  <div class="text-sm font-extrabold text-white">Barcode &amp; POD Control</div>
+                  <p class="text-xs text-blue-100 mt-1">Track every hub scan, rider dispatch &amp; OTP delivery proof.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-white/10 border border-white/15">
+                  <div class="text-sm font-extrabold text-white">Franchise Ready</div>
+                  <p class="text-xs text-blue-100 mt-1">Appoint city/pin partners as your volume scales.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5">
+              <div class="rounded-2xl bg-white text-slate-900 p-6 sm:p-7 shadow-float space-y-4">
+                <h3 class="text-lg font-extrabold text-slate-900">Franchise Partner &amp; Hub Inquiry</h3>
+                <p class="text-xs sm:text-sm text-slate-600">
+                  Apply for a local pickup/delivery outlet or city hub under Kamal Enterprise. Applications also sync directly into the Admin Portal.
+                </p>
+                <div class="rounded-xl bg-slate-50 border border-slate-200 p-4 space-y-1.5 text-xs">
+                  <div class="flex justify-between"><span class="text-slate-500">Formats</span><span class="font-bold text-slate-900">Pickup Point • City Hub</span></div>
+                  <div class="flex justify-between"><span class="text-slate-500">System</span><span class="font-bold text-[#0F4C81]">Barcode + AWB + POD</span></div>
+                  <div class="flex justify-between"><span class="text-slate-500">Developer / Desk</span><span class="font-bold text-[#EA580C]">sankaramitcs@gmail.com</span></div>
+                </div>
+                <button type="button" onclick="openFranchiseModal()" class="w-full py-3 px-5 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-sm font-extrabold transition cursor-pointer">
+                  Open Franchise Inquiry Modal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-300 pt-14 pb-10 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-800/90">
+          <div class="space-y-3">
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-white text-lg">KAMAL</span>
+              <span class="font-extrabold text-[#F97316] text-lg">ENTERPRISE</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Independent courier, parcel, B2B express, barcode tracking &amp; hub logistics across India.
+            </p>
+            <div class="text-xs space-y-1 pt-1">
+              <div><span class="text-slate-400">Developer &amp; Desk:</span> <a href="mailto:sankaramitcs@gmail.com" class="text-white font-semibold hover:text-[#F97316]">sankaramitcs@gmail.com</a></div>
+              <div><span class="text-slate-400">Credit:</span> <span class="text-slate-200 font-medium">Sankaram IT Consultant Services</span></div>
+            </div>
+          </div>
+
+          <div class="space-y-2.5">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Portals &amp; Actions</h3>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><button type="button" onclick="navigateToSection('mvp-workspace', 'track')" class="hover:text-[#F97316] cursor-pointer">Track Barcode / AWB</button></li>
+              <li><button type="button" onclick="navigateToSection('mvp-workspace', 'pickup')" class="hover:text-[#F97316] cursor-pointer">Book Doorstep Pickup</button></li>
+              <li><button type="button" onclick="openCustomerPortalOrLogin()" class="hover:text-[#F97316] cursor-pointer">Customer Login &amp; Portal</button></li>
+              <li><button type="button" onclick="openAdminPortalOrLogin()" class="text-[#F97316] font-semibold hover:underline cursor-pointer">Admin Login &amp; Operations Portal</button></li>
+            </ul>
+          </div>
+
+          <div class="space-y-2.5">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Serviceable Corridors</h3>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-400">
+              <li><button type="button" onclick="setRatePinsAndOpen('302001', '110001')" class="hover:text-white cursor-pointer">Jaipur (302001) ↔ Delhi NCR (110001)</button></li>
+              <li><button type="button" onclick="setRatePinsAndOpen('400001', '560001')" class="hover:text-white cursor-pointer">Mumbai (400001) ↔ Bengaluru (560001)</button></li>
+              <li><button type="button" onclick="setRatePinsAndOpen('395001', '380001')" class="hover:text-white cursor-pointer">Surat (395001) ↔ Ahmedabad (380001)</button></li>
+              <li><button type="button" onclick="setRatePinsAndOpen('452001', '500001')" class="hover:text-white cursor-pointer">Indore (452001) ↔ Hyderabad (500001)</button></li>
+            </ul>
+          </div>
+
+          <div class="space-y-2.5">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Policies &amp; Terms</h3>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><button type="button" onclick="openPolicyModal('terms')" class="hover:text-[#F97316] cursor-pointer">Terms &amp; Conditions</button></li>
+              <li><button type="button" onclick="openPolicyModal('privacy')" class="hover:text-[#F97316] cursor-pointer">Privacy Policy</button></li>
+              <li><button type="button" onclick="openPolicyModal('cod')" class="hover:text-[#F97316] cursor-pointer">Refund, Claims &amp; COD Policy</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <div>© <span id="currentYear">2026</span> Kamal Enterprise. Built by Sankaram IT Consultant Services.</div>
+          <div><a href="mailto:sankaramitcs@gmail.com" class="text-slate-300 hover:text-white font-medium">sankaramitcs@gmail.com</a></div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: ADMIN LOGIN MODAL                                            -->
+  <!-- ===================================================================== -->
+  <div id="adminLoginModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/65 backdrop-blur-xs p-4" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="bg-[#0A3357] text-white px-6 py-4 flex items-center justify-between">
+        <div>
+          <h3 id="adminLoginTitle" class="text-lg font-bold">Admin User Login</h3>
+          <p class="text-xs text-blue-200">Kamal Enterprise Parcel, Barcode &amp; Hub Control</p>
+        </div>
+        <button type="button" onclick="closeAdminLoginModal()" aria-label="Close admin login" class="p-1.5 rounded-lg text-blue-100 hover:bg-white/10 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <button type="button" onclick="loginAdminInstantDemo()" class="w-full py-2.5 px-4 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-xs sm:text-sm font-extrabold shadow-xs transition cursor-pointer">
+          1-Click Demo Admin Login (Kamal Operations Head)
+        </button>
+
+        <div class="relative flex items-center py-1">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="px-3 text-[11px] font-bold uppercase text-slate-400">Or Sign In with Admin Credentials</span>
+          <div class="flex-grow border-t border-slate-200"></div>
+        </div>
+
+        <form onsubmit="handleAdminLoginForm(event)" class="space-y-3.5">
+          <div>
+            <label for="admLoginEmail" class="block text-xs font-bold text-slate-700 mb-1">Admin Email or User ID</label>
+            <input id="admLoginEmail" type="text" required value="admin@kamalenterprise.in" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+          </div>
+          <div>
+            <label for="admLoginPassword" class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+            <input id="admLoginPassword" type="password" required value="KamalAdmin@2026" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#0F4C81]" />
+          </div>
+          <div>
+            <label for="admLoginHubRole" class="block text-xs font-bold text-slate-700 mb-1">Hub / Role Scope</label>
+            <select id="admLoginHubRole" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]">
+              <option value="Super Admin • All India Hubs">Super Admin • All India Hubs</option>
+              <option value="Jaipur Central Hub Manager (302001)">Jaipur Central Hub Manager (302001)</option>
+              <option value="Mumbai Dispatch & COD Controller (400001)">Mumbai Dispatch &amp; COD Controller (400001)</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-sm font-bold transition cursor-pointer">
+            Enter Admin Operations Portal
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: CUSTOMER LOGIN MODAL                                         -->
+  <!-- ===================================================================== -->
+  <div id="customerLoginModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4" role="dialog" aria-modal="true" aria-labelledby="customerLoginTitle">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="bg-[#0F4C81] text-white px-6 py-4 flex items-center justify-between">
+        <div>
+          <h3 id="customerLoginTitle" class="text-lg font-bold">Customer Portal Login</h3>
+          <p class="text-xs text-blue-200">Track orders, view invoices &amp; book pickups</p>
+        </div>
+        <button type="button" onclick="closeCustomerLoginModal()" aria-label="Close customer login" class="p-1.5 rounded-lg text-blue-100 hover:bg-white/10 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <button type="button" onclick="loginCustomerInstantDemo()" class="w-full py-2.5 px-4 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-[#EA580C] text-xs sm:text-sm font-extrabold transition cursor-pointer">
+          Instant Demo Login (Vikram Malhotra • Merchant Account)
+        </button>
+
+        <form onsubmit="handleCustomerLoginForm(event)" class="space-y-3.5">
+          <div>
+            <label for="custLoginId" class="block text-xs font-bold text-slate-700 mb-1">Email or Mobile</label>
+            <input id="custLoginId" type="text" required placeholder="e.g. vikram@example.com or 9829011223" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
+          </div>
+          <div>
+            <label for="custLoginFirm" class="block text-xs font-bold text-slate-700 mb-1">Business / Customer Name</label>
+            <input id="custLoginFirm" type="text" placeholder="e.g. Malhotra Traders" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
+          </div>
+          <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-sm font-bold transition cursor-pointer">
+            Open Customer Portal
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: FRANCHISE INQUIRY MODAL                                      -->
+  <!-- ===================================================================== -->
+  <div id="franchiseModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4" role="dialog" aria-modal="true" aria-labelledby="franchiseModalTitle">
+    <div class="bg-white rounded-2xl max-w-lg w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="bg-[#0F4C81] text-white px-6 py-4 flex items-center justify-between">
+        <div>
+          <h3 id="franchiseModalTitle" class="text-lg font-bold">Kamal Enterprise Franchise Inquiry</h3>
+          <p class="text-xs text-blue-200">Apply for a local pickup/delivery outlet or city hub</p>
+        </div>
+        <button type="button" onclick="closeFranchiseModal()" aria-label="Close franchise modal" class="p-1.5 rounded-lg text-blue-100 hover:bg-white/10 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form onsubmit="handleFranchiseInquirySubmit(event)" class="p-6 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="franName" class="block text-xs font-bold text-slate-700 mb-1">Applicant Name</label>
+            <input id="franName" type="text" required placeholder="Full Name" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
+          </div>
+          <div>
+            <label for="franPhone" class="block text-xs font-bold text-slate-700 mb-1">Phone / WhatsApp</label>
+            <input id="franPhone" type="tel" required placeholder="+91 98XXX XXXXX" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="franCityPin" class="block text-xs font-bold text-slate-700 mb-1">City &amp; Pin Code</label>
+            <input id="franCityPin" type="text" required placeholder="e.g. Udaipur - 313001" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm" />
+          </div>
+          <div>
+            <label for="franModel" class="block text-xs font-bold text-slate-700 mb-1">Franchise Format</label>
+            <select id="franModel" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold bg-white">
+              <option value="Pickup & Delivery Centre">Pickup &amp; Delivery Centre</option>
+              <option value="City Hub & Linehaul Centre">City Hub &amp; Linehaul Centre</option>
+              <option value="Multi-Pin Area Franchise">Multi-Pin Area Franchise</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="franNotes" class="block text-xs font-bold text-slate-700 mb-1">Shop Space / Fleet / Notes</label>
+          <textarea id="franNotes" rows="2" placeholder="Space sq. ft., riders/vehicles, target launch month..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm"></textarea>
+        </div>
+        <div id="franchiseModalFeedback" class="hidden rounded-xl p-3 text-xs font-bold"></div>
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="closeFranchiseModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs sm:text-sm font-bold cursor-pointer">Close</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-xs sm:text-sm font-bold cursor-pointer">Submit Inquiry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 4: INFO / BARCODE LABEL / POLICY MODAL                          -->
+  <!-- ===================================================================== -->
+  <div id="infoModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 backdrop-blur-xs p-4" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+    <div class="bg-white rounded-2xl max-w-lg w-full border border-slate-200 shadow-2xl overflow-hidden">
+      <div class="bg-[#0F4C81] text-white px-6 py-4 flex items-center justify-between">
+        <h3 id="infoModalTitle" class="text-lg font-bold">Details</h3>
+        <button type="button" onclick="closeInfoModal()" aria-label="Close details modal" class="p-1.5 rounded-lg text-blue-100 hover:bg-white/10 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="infoModalBody" class="p-6 text-xs sm:text-sm text-slate-600 space-y-3 leading-relaxed max-h-[72vh] overflow-y-auto"></div>
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <button type="button" onclick="closeInfoModal()" class="px-4 py-2 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-xs sm:text-sm font-bold cursor-pointer">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. STATUS WORKFLOW DEFINITIONS & SHARED LIVE STATE
+    // =========================================================================
+    const STATUS_FLOW = [
+      'Booked',
+      'Pickup Assigned',
+      'Picked Up',
+      'At Origin Hub',
+      'In Transit',
+      'At Destination Hub',
+      'Out for Delivery',
+      'Delivered',
+      'RTO Initiated',
+      'Exception',
+    ];
+
+    function getStatusBadgeClass(status) {
+      switch (status) {
+        case 'Delivered':
+          return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        case 'Out for Delivery':
+          return 'bg-orange-100 text-[#EA580C] border-orange-200';
+        case 'In Transit':
+        case 'At Origin Hub':
+        case 'At Destination Hub':
+          return 'bg-blue-100 text-[#0F4C81] border-blue-200';
+        case 'RTO Initiated':
+        case 'Exception':
+          return 'bg-red-100 text-red-800 border-red-200';
+        default:
+          return 'bg-slate-100 text-slate-800 border-slate-200';
+      }
+    }
+
+    const appState = {
+      activeMvpTab: 'track',
+      trackedCode: 'KEBC100201',
+      selectedServiceId: 'express-parcel',
+      adminUser: null,
+      activeAdminSection: 'overview',
+      adminInspectedCode: 'KEBC100201',
+      customerUser: null,
+      rateRules: {
+        baseFare: 65,
+        perKg: 22,
+        expressMult: 1.45,
+        codPct: 1.5,
+      },
+      riders: [
+        { id: 'RDR-01', name: 'Deepak Sharma', hub: 'Mumbai South Hub (400001)', phone: '+91 98201 44110', status: 'On Duty' },
+        { id: 'RDR-02', name: 'Karthik Nair', hub: 'Bengaluru Central Hub (560001)', phone: '+91 98450 77812', status: 'On Duty' },
+        { id: 'RDR-03', name: 'Suresh Yadav', hub: 'Jaipur Central Hub (302001)', phone: '+91 98290 91204', status: 'On Duty' },
+      ],
+      servicePins: [
+        { pin: '302001', city: 'Jaipur Central Hub (RJ)', active: true },
+        { pin: '110001', city: 'New Delhi / NCR Hub (DL)', active: true },
+        { pin: '400001', city: 'Mumbai South Hub (MH)', active: true },
+        { pin: '560001', city: 'Bengaluru MG Hub (KA)', active: true },
+        { pin: '395001', city: 'Surat Textile Hub (GJ)', active: true },
+        { pin: '380001', city: 'Ahmedabad Hub (GJ)', active: true },
+      ],
+      franchiseApps: [
+        { id: 'FRN-101', name: 'Mahesh Agarwal', phone: '+91 98291 55410', cityPin: 'Ajmer - 305001', format: 'Pickup & Delivery Centre', notes: '450 sq.ft. ground shop near station, 2 riders ready.', status: 'Under Review' },
+        { id: 'FRN-102', name: 'Nitin Deshmukh', phone: '+91 98230 66789', cityPin: 'Pune - 411001', format: 'City Hub & Linehaul Centre', notes: '1,200 sq.ft. godown with loading bay.', status: 'Approved' },
+      ],
+      activityLogs: [
+        { time: 'Today, 02:40 PM', text: 'Barcode KEBC100202 marked Out for Delivery in Bengaluru (560001).' },
+        { time: 'Today, 01:42 PM', text: 'Barcode KEBC100201 Delivered with OTP + Photo POD.' },
+        { time: 'Today, 12:15 PM', text: 'Barcode KEBC100203 scanned at Western Linehaul Corridor.' },
+      ],
+      parcels: [
+        {
+          barcode: 'KEBC100201',
+          awb: 'AWB8849201',
+          senderName: 'Kamal Traders',
+          senderPhone: '9829011122',
+          originPin: '302001',
+          originCity: 'Jaipur Hub',
+          receiverName: 'Ananya Mehta',
+          receiverPhone: '9820144110',
+          destPin: '400001',
+          destCity: 'Mumbai Hub',
+          weightKg: 2.5,
+          serviceType: 'Express Air',
+          paymentMode: 'Prepaid',
+          codAmount: 0,
+          codSettled: true,
+          fareInr: 235,
+          status: 'Delivered',
+          currentHub: 'Mumbai South Delivery Hub (400001)',
+          riderName: 'Deepak Sharma',
+          eta: 'Delivered Today, 01:42 PM',
+          podVerified: true,
+          podRef: 'OTP-7742 + PHOTO POD',
+          history: [
+            { status: 'Booked', hub: 'Jaipur Hub (302001)', remark: 'Parcel booked & barcode KEBC100201 generated', time: 'Yesterday, 03:20 PM' },
+            { status: 'At Origin Hub', hub: 'Jaipur Central Hub (302001)', remark: 'Bagged for Mumbai linehaul', time: 'Yesterday, 08:15 PM' },
+            { status: 'In Transit', hub: 'West Corridor Transit', remark: 'Linehaul movement completed', time: 'Today, 07:40 AM' },
+            { status: 'Delivered', hub: 'Mumbai South Hub (400001)', remark: 'Handed over with OTP & photo POD', time: 'Today, 01:42 PM' },
+          ],
+        },
+        {
+          barcode: 'KEBC100202',
+          awb: 'AWB7731045',
+          senderName: 'Delhi Craft Export',
+          senderPhone: '9811033445',
+          originPin: '110001',
+          originCity: 'New Delhi Hub',
+          receiverName: 'Rohan Kulkarni',
+          receiverPhone: '9845077812',
+          destPin: '560001',
+          destCity: 'Bengaluru Hub',
+          weightKg: 4.0,
+          serviceType: 'Surface Standard',
+          paymentMode: 'COD',
+          codAmount: 1850,
+          codSettled: false,
+          fareInr: 170,
+          status: 'Out for Delivery',
+          currentHub: 'Bengaluru MG Beat (560001)',
+          riderName: 'Karthik Nair',
+          eta: 'Today by 06:30 PM',
+          podVerified: false,
+          podRef: 'Awaiting Doorstep OTP + COD ₹1,850',
+          history: [
+            { status: 'Booked', hub: 'New Delhi Hub (110001)', remark: 'COD parcel created (₹1,850)', time: '2 days ago, 10:05 AM' },
+            { status: 'In Transit', hub: 'North-South Linehaul', remark: 'Dispatched to Bengaluru hub', time: 'Yesterday, 05:30 PM' },
+            { status: 'Out for Delivery', hub: 'Bengaluru MG Beat (560001)', remark: 'Assigned to rider Karthik Nair', time: 'Today, 11:05 AM' },
+          ],
+        },
+        {
+          barcode: 'KEBC100203',
+          awb: 'AWB9012834',
+          senderName: 'Surat Silk Mills',
+          senderPhone: '9825130921',
+          originPin: '395001',
+          originCity: 'Surat Hub',
+          receiverName: 'Patel Garments',
+          receiverPhone: '9825099881',
+          destPin: '380001',
+          destCity: 'Ahmedabad Hub',
+          weightKg: 6.5,
+          serviceType: 'Surface Standard',
+          paymentMode: 'Prepaid',
+          codAmount: 0,
+          codSettled: true,
+          fareInr: 200,
+          status: 'In Transit',
+          currentHub: 'Surat-Ahmedabad Linehaul',
+          riderName: 'Suresh Yadav',
+          eta: 'Tomorrow by 02:00 PM',
+          podVerified: false,
+          podRef: 'Scheduled at Delivery',
+          history: [
+            { status: 'Booked', hub: 'Surat Hub (395001)', remark: 'B2B carton manifest created', time: 'Today, 09:00 AM' },
+            { status: 'In Transit', hub: 'Surat-Ahmedabad Linehaul', remark: 'Loaded on scheduled hub van', time: 'Today, 12:15 PM' },
+          ],
+        },
+        {
+          barcode: 'KEBC100204',
+          awb: 'AWB9015520',
+          senderName: 'Jaipur Gems & Decor',
+          senderPhone: '9829091204',
+          originPin: '302001',
+          originCity: 'Jaipur Hub',
+          receiverName: 'Meera Store',
+          receiverPhone: '9811223344',
+          destPin: '110001',
+          destCity: 'New Delhi Hub',
+          weightKg: 1.5,
+          serviceType: 'Priority Express',
+          paymentMode: 'COD',
+          codAmount: 2400,
+          codSettled: false,
+          fareInr: 175,
+          status: 'At Origin Hub',
+          currentHub: 'Jaipur Central Hub (302001)',
+          riderName: 'Suresh Yadav',
+          eta: 'Tomorrow by 05:00 PM',
+          podVerified: false,
+          podRef: 'Scheduled at Delivery',
+          history: [
+            { status: 'Booked', hub: 'Jaipur Hub (302001)', remark: 'Express COD booking logged', time: 'Today, 01:10 PM' },
+            { status: 'At Origin Hub', hub: 'Jaipur Central Hub (302001)', remark: 'Barcode scanned & weight verified (1.5 kg)', time: 'Today, 02:05 PM' },
+          ],
+        },
+      ],
+    };
+
+    const SERVICES_MODULES = [
+      {
+        id: 'express-parcel',
+        badge: '01 • EXPRESS PARCEL',
+        title: 'Express & Air Parcel',
+        summary: 'Fast inter-city parcel movement with priority hub handling, barcode scan milestones, and predictable transit.',
+        sla: '24–48 hrs (Major Hubs)',
+        points: [
+          'Ideal for urgent business parcels, samples & high-priority orders',
+          'Real-time barcode & AWB scan updates at every hub',
+          'Instant INR fare calculation with transparent weight slabs',
+        ],
+        cta: 'Calculate Express Rate',
+        target: 'rate',
+      },
+      {
+        id: 'surface-b2b',
+        badge: '02 • SURFACE & B2B',
+        title: 'Surface & B2B Freight',
+        summary: 'Cost-effective multi-kg carton and commercial shipment movement across Indian pin codes.',
+        sla: '2–5 Business Days',
+        points: [
+          'Built for traders, wholesalers, manufacturers & recurring B2B dispatch',
+          'Lower per-kg cost compared to air/express for heavier boxes',
+          'Full visibility in Admin & Customer portals',
+        ],
+        cta: 'Book B2B Pickup',
+        target: 'pickup',
+      },
+      {
+        id: 'hyperlocal-sameday',
+        badge: '03 • HYPERLOCAL SAME-DAY',
+        title: 'Hyperlocal Same-Day Delivery',
+        summary: 'Rapid intra-city pickup and doorstep drop for same-day local dispatches and urgent documents.',
+        sla: 'Same Day (4–8 hrs)',
+        points: [
+          'Quick local dispatch for shops, clinics, offices & city buyers',
+          'Direct rider assignment & live delivery status',
+          'Helps local sellers compete with instant delivery expectations',
+        ],
+        cta: 'Book Same-Day Pickup',
+        target: 'pickup',
+      },
+      {
+        id: 'cod-remittance',
+        badge: '04 • COD & REMITTANCE',
+        title: 'COD & Remittance Control',
+        summary: 'Collect Cash-on-Delivery at handover and track collected vs. pending remittance clearly in Admin.',
+        sla: 'Verified at Handover + Ledger Sync',
+        points: [
+          'Boosts customer conversion on COD orders',
+          'Admin COD tab tracks pending vs. settled cash per barcode',
+          'Configurable COD fee percentage in INR tariffs',
+        ],
+        cta: 'Open COD & Tariff Rules',
+        target: 'admin-cod',
+      },
+      {
+        id: 'rider-pod',
+        badge: '05 • RIDER POD APP',
+        title: 'Rider App & Live POD',
+        summary: 'Field execution with OTP verification, photo/signature Proof of Delivery, and clean delivery status updates.',
+        sla: 'Instant POD Record',
+        points: [
+          'Reduces disputes with verified delivery proof',
+          'Clear tracking of Out for Delivery, Delivered, or Exceptions',
+          'Visible directly inside AWB/Barcode tracking',
+        ],
+        cta: 'Inspect Live POD Tracking',
+        target: 'track',
+      },
+      {
+        id: 'hub-barcode',
+        badge: '06 • HUB & BARCODE SCANNER',
+        title: 'Hub & Barcode Operations',
+        summary: 'Generate barcodes, look up any parcel by barcode value in seconds, and step statuses across hubs.',
+        sla: 'Real-Time Status Workflow',
+        points: [
+          'Create running parcels with custom or auto barcodes (KEBC...)',
+          'Instant barcode lookup inspector for fast warehouse/desk checks',
+          'Step through Booked → In Transit → Out for Delivery → Delivered',
+        ],
+        cta: 'Open Admin Barcode Lookup',
+        target: 'admin-barcode',
+      },
+      {
+        id: 'own-franchise',
+        badge: '07 • OWN FRANCHISE PORTAL',
+        title: 'Future Own Franchise Model',
+        summary: 'Scale Kamal Enterprise across new cities by onboarding local franchise collection & hub partners.',
+        sla: 'Pin-Cluster & Hub Onboarding',
+        points: [
+          'Build your own brand equity instead of paying third-party royalties',
+          'Manage serviceable pin codes & franchise inquiries in Admin',
+          'Expand city-by-city as shipment volume grows',
+        ],
+        cta: 'Apply for Franchise Hub',
+        target: 'franchise-modal',
+      },
+    ];
+
+    // =========================================================================
+    // 2. FARE & BARCODE HELPERS
+    // =========================================================================
+    function findParcelByCode(code) {
+      const clean = String(code || '').trim().toUpperCase();
+      if (!clean) return null;
+      return (
+        appState.parcels.find(
+          (p) => p.barcode.toUpperCase() === clean || p.awb.toUpperCase() === clean
+        ) || null
+      );
+    }
+
+    function generateNextBarcode() {
+      const nums = appState.parcels
+        .map((p) => parseInt(String(p.barcode).replace(/\D/g, ''), 10))
+        .filter((n) => !Number.isNaN(n));
+      const maxNum = nums.length ? Math.max(...nums) : 100204;
+      return `KEBC${maxNum + 1}`;
+    }
+
+    function generateNextAwb() {
+      const rand = Math.floor(1000000 + Math.random() * 8999999);
+      return `AWB${rand}`;
+    }
+
+    function calculateParcelFare({ originPin = '302001', destPin = '400001', weightKg = 2, mode = 'surface', paymentMode = 'Prepaid', codAmount = 0 }) {
+      const o = String(originPin || '').replace(/\D/g, '');
+      const d = String(destPin || '').replace(/\D/g, '');
+      const w = Math.max(0.2, Number(weightKg) || 1);
+      const isLocal = o.length >= 3 && d.length >= 3 && o.slice(0, 3) === d.slice(0, 3);
+
+      const base = isLocal ? Math.max(40, appState.rateRules.baseFare - 20) : appState.rateRules.baseFare;
+      const extraKg = Math.max(0, w - 0.5);
+      let mult = 1.0;
+      let eta = isLocal ? '1–2 Business Days' : '3–5 Business Days';
+
+      if (mode === 'air') {
+        mult = appState.rateRules.expressMult;
+        eta = '1–2 Business Days';
+      } else if (mode === 'express') {
+        mult = Number((appState.rateRules.expressMult + 0.25).toFixed(2));
+        eta = '24–36 Hours';
+      } else if (mode === 'sameday') {
+        mult = 1.35;
+        eta = 'Same Day (4–8 hrs)';
+      }
+
+      const rawFreight = (base + extraKg * appState.rateRules.perKg) * mult;
+      const freightFare = Math.round(rawFreight / 5) * 5;
+      const codAmtNum = paymentMode === 'COD' ? Math.max(0, Number(codAmount) || 0) : 0;
+      const codFee = codAmtNum > 0 ? Math.max(25, Math.round(codAmtNum * (appState.rateRules.codPct / 100))) : 0;
+
+      return {
+        isLocal,
+        eta,
+        freightFare,
+        codFee,
+        totalFare: freightFare + codFee,
+      };
+    }
+
+    function renderBarcodeVisual(codeText) {
+      return `
+        <div class="rounded-xl border border-slate-200 bg-white p-3.5 text-center space-y-1.5">
+          <div class="h-11 w-full barcode-bars rounded-sm mx-auto"></div>
+          <div class="font-mono text-xs sm:text-sm font-extrabold tracking-widest text-slate-900">${escapeHtml(codeText)}</div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 3. PUBLIC NAVIGATION, HERO & MVP SUITE
+    // =========================================================================
+    function exitAdminToPublic(sectionId = 'home', mvpTab = null) {
+      document.getElementById('adminPortalSection').classList.add('hidden');
+      document.getElementById('publicSiteWrapper').classList.remove('hidden');
+      if (mvpTab) {
+        switchMvpTab(mvpTab);
+      }
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function navigateToSection(sectionId, mvpTab = null) {
+      exitAdminToPublic(sectionId, mvpTab);
+    }
+
+    function toggleMobileNav() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const openSvg = document.getElementById('mobileOpenSvg');
+      const closeSvg = document.getElementById('mobileCloseSvg');
+      const willOpen = drawer.classList.contains('hidden');
+      drawer.classList.toggle('hidden', !willOpen);
+      openSvg.classList.toggle('hidden', willOpen);
+      closeSvg.classList.toggle('hidden', !willOpen);
+    }
+
+    function closeMobileNav() {
+      document.getElementById('mobileNavDrawer').classList.add('hidden');
+      document.getElementById('mobileOpenSvg').classList.remove('hidden');
+      document.getElementById('mobileCloseSvg').classList.add('hidden');
+    }
+
+    function handleHeroQuickTrack(event) {
+      event.preventDefault();
+      const val = (document.getElementById('heroAwbInput').value || '').trim().toUpperCase() || 'KEBC100201';
+      quickTrackSample(val);
+    }
+
+    function quickTrackSample(code) {
+      const clean = String(code).trim().toUpperCase();
+      document.getElementById('heroAwbInput').value = clean;
+      document.getElementById('mvpTrackInput').value = clean;
+      appState.trackedCode = clean;
+      exitAdminToPublic('mvp-workspace', 'track');
+      renderMvpTrackingResult(clean);
+    }
+
+    function updateHeroQuickEstimate() {
+      const oPin = document.getElementById('heroOriginPin').value.trim();
+      const dPin = document.getElementById('heroDestPin').value.trim();
+      const w = parseFloat(document.getElementById('heroWeightRange').value) || 1;
+      document.getElementById('heroWeightText').textContent = `${w.toFixed(1)} kg`;
+
+      const est = calculateParcelFare({ originPin: oPin, destPin: dPin, weightKg: w, mode: 'surface' });
+      document.getElementById('heroQuickEstimateCard').innerHTML = `
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-[#0F4C81]">Surface Quote (${escapeHtml(est.eta)})</div>
+          <div class="text-2xl font-extrabold text-slate-900 mt-0.5">₹${est.totalFare.toLocaleString('en-IN')}</div>
+          <div class="text-[11px] text-slate-600">${est.isLocal ? 'Local Zone' : 'Inter-City Corridor'}</div>
+        </div>
+        <span class="px-3 py-1 rounded-full bg-white border border-blue-200 text-[#0F4C81] text-xs font-extrabold">Serviceable</span>
+      `;
+    }
+
+    function applyHeroEstimateToBooking() {
+      document.getElementById('custPickupPin').value = document.getElementById('heroOriginPin').value.trim() || '302001';
+      document.getElementById('custDropPin').value = document.getElementById('heroDestPin').value.trim() || '400001';
+      document.getElementById('custWeight').value = document.getElementById('heroWeightRange').value || '2.5';
+      navigateToSection('mvp-workspace', 'pickup');
+      updateCustomerBookingEstimate();
+    }
+
+    function setRatePinsAndOpen(oPin, dPin) {
+      document.getElementById('rateOriginPin').value = oPin;
+      document.getElementById('rateDestPin').value = dPin;
+      navigateToSection('mvp-workspace', 'rate');
+      calculateRateComparison();
+    }
+
+    // Services Grid & Detail Inspector
+    function renderServicesGrid() {
+      const grid = document.getElementById('servicesGrid');
+      grid.innerHTML = SERVICES_MODULES.map((m) => {
+        const selected = appState.selectedServiceId === m.id;
+        return `
+          <button type="button" onclick="selectServiceModule('${m.id}')" class="text-left rounded-2xl p-5 transition cursor-pointer flex flex-col justify-between ${
+            selected
+              ? 'border-2 border-[#0F4C81] bg-blue-50/40 shadow-card'
+              : 'border border-slate-200 bg-white hover:border-[#0F4C81]/50 hover:shadow-card'
+          }">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#EA580C]">${escapeHtml(m.badge)}</span>
+                <span class="text-xs font-bold text-[#0F4C81]">${selected ? 'Active' : 'Details →'}</span>
+              </div>
+              <h3 class="text-base sm:text-lg font-extrabold text-slate-900">${escapeHtml(m.title)}</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">${escapeHtml(m.summary)}</p>
+            </div>
+            <div class="mt-4 pt-2.5 border-t border-slate-200/70 text-[11px] font-semibold text-slate-500">
+              SLA: ${escapeHtml(m.sla)}
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      renderServiceDetailBox();
+    }
+
+    function selectServiceModule(id) {
+      appState.selectedServiceId = id;
+      renderServicesGrid();
+    }
+
+    function renderServiceDetailBox() {
+      const m = SERVICES_MODULES.find((s) => s.id === appState.selectedServiceId) || SERVICES_MODULES[0];
+      const bullets = m.points
+        .map(
+          (pt) => `
+          <li class="flex items-start gap-2 text-xs sm:text-sm text-slate-700">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-[#EA580C] shrink-0"></span>
+            <span>${escapeHtml(pt)}</span>
+          </li>
+        `
+        )
+        .join('');
+
+      let actionCode = `navigateToSection('mvp-workspace', '${m.target}')`;
+      if (m.target === 'franchise-modal') {
+        actionCode = 'openFranchiseModal()';
+      } else if (m.target.startsWith('admin-')) {
+        const sec = m.target.replace('admin-', '');
+        actionCode = `openAdminToSection('${sec}')`;
+      }
+
+      document.getElementById('serviceDetailBox').innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-8 space-y-2.5">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">${escapeHtml(m.badge)}</span>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">${escapeHtml(m.title)}</h3>
+            <p class="text-xs sm:text-sm text-slate-600">${escapeHtml(m.summary)}</p>
+            <ul class="space-y-1.5 pt-1">${bullets}</ul>
+          </div>
+          <div class="lg:col-span-4 rounded-2xl bg-white border border-slate-200 p-5 space-y-3">
+            <div class="text-xs text-slate-600"><strong>Operational SLA:</strong> ${escapeHtml(m.sla)}</div>
+            <button type="button" onclick="${actionCode}" class="w-full py-2.5 px-4 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-xs sm:text-sm font-bold transition cursor-pointer">
+              ${escapeHtml(m.cta)}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // MVP Tabs & Tracking
+    function switchMvpTab(tab) {
+      appState.activeMvpTab = tab;
+      ['track', 'pickup', 'rate', 'account'].forEach((t) => {
+        const btn = document.getElementById(`mvpTab-${t}`);
+        const panel = document.getElementById(`mvpPanel-${t}`);
+        const active = t === tab;
+        if (btn) {
+          btn.setAttribute('aria-selected', String(active));
+          btn.className = active
+            ? 'py-3 px-4 rounded-xl text-xs sm:text-sm font-bold bg-[#0F4C81] text-white shadow-xs transition cursor-pointer'
+            : 'py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-slate-600 hover:bg-slate-100 hover:text-[#0F4C81] transition cursor-pointer';
+        }
+        if (panel) panel.classList.toggle('hidden', !active);
+      });
+
+      if (tab === 'track') renderMvpTrackingResult(appState.trackedCode);
+      if (tab === 'pickup') updateCustomerBookingEstimate();
+      if (tab === 'rate') calculateRateComparison();
+      if (tab === 'account') renderCustomerPortal();
+    }
+
+    function renderMvpSampleChips() {
+      const row = document.getElementById('mvpSampleBarcodeRow');
+      const codes = appState.parcels.slice(0, 6).map((p) => p.barcode);
+      row.innerHTML = `<span class="text-xs font-bold text-slate-500">Quick Load:</span>` +
+        codes
+          .map(
+            (c) => `
+            <button type="button" onclick="loadMvpTrackCode('${c}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-800 hover:text-[#0F4C81] border border-slate-200 text-xs font-mono font-bold transition cursor-pointer">
+              ${escapeHtml(c)}
+            </button>
+          `
+          )
+          .join('');
+    }
+
+    function handleMvpTrackForm(event) {
+      event.preventDefault();
+      const code = (document.getElementById('mvpTrackInput').value || '').trim().toUpperCase();
+      if (!code) return;
+      appState.trackedCode = code;
+      renderMvpTrackingResult(code);
+    }
+
+    function loadMvpTrackCode(code) {
+      const clean = String(code).trim().toUpperCase();
+      document.getElementById('mvpTrackInput').value = clean;
+      appState.trackedCode = clean;
+      renderMvpTrackingResult(clean);
+    }
+
+    function renderMvpTrackingResult(code) {
+      const box = document.getElementById('mvpTrackingResult');
+      const p = findParcelByCode(code);
+      if (!p) {
+        box.innerHTML = `
+          <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="text-sm font-extrabold text-amber-900">Barcode / AWB "${escapeHtml(code)}" Not Found</div>
+              <p class="text-xs text-amber-800 mt-0.5">Try sample barcode <strong>KEBC100201</strong> or book/create a new parcel.</p>
+            </div>
+            <button type="button" onclick="switchMvpTab('pickup')" class="px-4 py-2 rounded-xl bg-[#EA580C] text-white text-xs font-bold shrink-0 cursor-pointer">
+              Book Pickup
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const historyHtml = p.history
+        .map(
+          (h, idx) => `
+          <div class="flex items-start justify-between gap-4 pb-4 last:pb-0">
+            <div class="flex items-start gap-3">
+              <span class="mt-1 w-3 h-3 rounded-full shrink-0 ${idx === p.history.length - 1 ? 'bg-[#EA580C] ring-4 ring-orange-100' : 'bg-[#0F4C81]'}"></span>
+              <div>
+                <div class="text-xs sm:text-sm font-bold text-slate-900">${escapeHtml(h.status)} — <span class="text-[#0F4C81]">${escapeHtml(h.hub)}</span></div>
+                <div class="text-xs text-slate-600">${escapeHtml(h.remark)}</div>
+              </div>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-500 shrink-0">${escapeHtml(h.time)}</span>
+          </div>
+        `
+        )
+        .join('');
+
+      box.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div class="lg:col-span-7 rounded-2xl border border-slate-200 bg-[#F8FAFC] p-5 sm:p-6 space-y-5">
+            <div class="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <div class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Barcode &amp; AWB</div>
+                <div class="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono mt-0.5">${escapeHtml(p.barcode)} <span class="text-sm font-semibold text-slate-500">/ ${escapeHtml(p.awb)}</span></div>
+                <div class="text-xs sm:text-sm text-slate-600 mt-1">${escapeHtml(p.originCity)} (${escapeHtml(p.originPin)}) → ${escapeHtml(p.destCity)} (${escapeHtml(p.destPin)})</div>
+              </div>
+              <span class="px-3 py-1.5 rounded-full border text-xs font-extrabold ${getStatusBadgeClass(p.status)}">${escapeHtml(p.status)}</span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div class="p-3 rounded-xl bg-white border border-slate-200">
+                <span class="text-slate-400 block">Mode</span>
+                <span class="font-bold text-slate-900">${escapeHtml(p.serviceType)}</span>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-slate-200">
+                <span class="text-slate-400 block">Payment</span>
+                <span class="font-bold text-slate-900">${escapeHtml(p.paymentMode)}${p.paymentMode === 'COD' ? ` (₹${p.codAmount})` : ''}</span>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-slate-200">
+                <span class="text-slate-400 block">Rider</span>
+                <span class="font-bold text-slate-900">${escapeHtml(p.riderName)}</span>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-slate-200">
+                <span class="text-slate-400 block">ETA / Update</span>
+                <span class="font-bold text-[#0F4C81]">${escapeHtml(p.eta)}</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">Tracking Timeline</div>
+              ${historyHtml}
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 space-y-4">
+            ${renderBarcodeVisual(p.barcode)}
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 space-y-2.5 text-xs">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Sender &amp; Receiver</div>
+              <div><strong>Sender:</strong> ${escapeHtml(p.senderName)} (${escapeHtml(p.originPin)})</div>
+              <div><strong>Receiver:</strong> ${escapeHtml(p.receiverName)} (${escapeHtml(p.destPin)})</div>
+              <div><strong>Current Hub:</strong> ${escapeHtml(p.currentHub)}</div>
+              <div><strong>POD Status:</strong> <span class="font-bold ${p.podVerified ? 'text-emerald-700' : 'text-[#EA580C]'}">${escapeHtml(p.podRef)}</span></div>
+              <div class="pt-2 flex gap-2">
+                <button type="button" onclick="openBarcodeSlipModal('${p.barcode}')" class="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-[#0F4C81] text-white font-bold cursor-pointer">
+                  Print / View Slip
+                </button>
+                <button type="button" onclick="openAdminBarcodeWithCode('${p.barcode}')" class="py-2 px-3 rounded-xl border border-slate-300 hover:border-[#0F4C81] text-[#0F4C81] font-bold cursor-pointer">
+                  Admin Inspect
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Customer Pickup Booking
+    function prefillCustomerPickupForm() {
+      document.getElementById('custSenderName').value = 'Jaipur Heritage Crafts';
+      document.getElementById('custSenderPhone').value = '9829044321';
+      document.getElementById('custPickupPin').value = '302001';
+      document.getElementById('custPickupAddress').value = '29 MI Road, Jaipur';
+      document.getElementById('custReceiverName').value = 'Ananya Lifestyle';
+      document.getElementById('custReceiverPhone').value = '9820166543';
+      document.getElementById('custDropPin').value = '400001';
+      document.getElementById('custDropAddress').value = '8 Fort Street, Mumbai';
+      document.getElementById('custWeight').value = '2.5';
+      document.getElementById('custMode').value = 'air';
+      document.getElementById('custPayType').value = 'COD';
+      document.getElementById('custCodAmt').value = '1200';
+      updateCustomerBookingEstimate();
+    }
+
+    function updateCustomerBookingEstimate() {
+      const oPin = document.getElementById('custPickupPin').value.trim();
+      const dPin = document.getElementById('custDropPin').value.trim();
+      const w = parseFloat(document.getElementById('custWeight').value) || 0.5;
+      const mode = document.getElementById('custMode').value;
+      const payType = document.getElementById('custPayType').value;
+      const codAmt = parseFloat(document.getElementById('custCodAmt').value) || 0;
+
+      const est = calculateParcelFare({ originPin: oPin, destPin: dPin, weightKg: w, mode, paymentMode: payType, codAmount: codAmt });
+      document.getElementById('custEtaBadge').textContent = est.eta;
+      document.getElementById('custTotalFare').textContent = `₹${est.totalFare.toLocaleString('en-IN')}`;
+      document.getElementById('custFareBreakdown').innerHTML = `
+        <div class="flex justify-between"><span>Freight (${w.toFixed(1)} kg)</span><span>₹${est.freightFare.toLocaleString('en-IN')}</span></div>
+        <div class="flex justify-between"><span>COD Handling (${payType})</span><span>₹${est.codFee.toLocaleString('en-IN')}</span></div>
+      `;
+    }
+
+    function handleCustomerPickupSubmit(event) {
+      event.preventDefault();
+      try {
+        const senderName = document.getElementById('custSenderName').value.trim();
+        const senderPhone = document.getElementById('custSenderPhone').value.trim();
+        const originPin = document.getElementById('custPickupPin').value.trim();
+        const originCity = document.getElementById('custPickupAddress').value.trim();
+        const receiverName = document.getElementById('custReceiverName').value.trim();
+        const receiverPhone = document.getElementById('custReceiverPhone').value.trim();
+        const destPin = document.getElementById('custDropPin').value.trim();
+        const destCity = document.getElementById('custDropAddress').value.trim();
+        const weightKg = parseFloat(document.getElementById('custWeight').value) || 1;
+        const mode = document.getElementById('custMode').value;
+        const paymentMode = document.getElementById('custPayType').value;
+        const codAmount = paymentMode === 'COD' ? Math.max(0, parseFloat(document.getElementById('custCodAmt').value) || 0) : 0;
+
+        const modeNames = {
+          surface: 'Surface Standard',
+          air: 'Express Air',
+          express: 'Priority Express',
+          sameday: 'Same-Day Local',
+        };
+        const serviceType = modeNames[mode] || 'Surface Standard';
+        const est = calculateParcelFare({ originPin, destPin, weightKg, mode, paymentMode, codAmount });
+
+        const barcode = generateNextBarcode();
+        const awb = generateNextAwb();
+        const nowStr = 'Just Now (IST)';
+
+        const newParcel = {
+          barcode,
+          awb,
+          senderName,
+          senderPhone,
+          originPin,
+          originCity,
+          receiverName,
+          receiverPhone,
+          destPin,
+          destCity,
+          weightKg,
+          serviceType,
+          paymentMode,
+          codAmount,
+          codSettled: false,
+          fareInr: est.totalFare,
+          status: 'Booked',
+          currentHub: `Origin Pickup Desk (${originPin})`,
+          riderName: 'Suresh Yadav',
+          eta: est.eta,
+          podVerified: false,
+          podRef: 'Scheduled on Delivery',
+          history: [
+            { status: 'Booked', hub: `${originCity} (${originPin})`, remark: `Pickup booked by ${senderName}`, time: nowStr },
+          ],
+        };
+
+        appState.parcels.unshift(newParcel);
+        appState.trackedCode = barcode;
+        appState.activityLogs.unshift({
+          time: nowStr,
+          text: `New pickup ${barcode} (${paymentMode}, ${weightKg} kg) booked from ${originPin} to ${destPin}.`,
+        });
+
+        renderMvpSampleChips();
+        refreshAllAdminViews();
+
+        document.getElementById('custBookingReceipt').innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Pickup Confirmed</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[11px] font-bold">Synced</span>
+          </div>
+          ${renderBarcodeVisual(barcode)}
+          <div class="text-xs text-slate-600 space-y-1">
+            <div><strong>AWB:</strong> <span class="font-mono font-bold text-[#0F4C81]">${escapeHtml(awb)}</span></div>
+            <div><strong>Route:</strong> ${escapeHtml(originPin)} → ${escapeHtml(destPin)} • <strong>Fare:</strong> ₹${est.totalFare.toLocaleString('en-IN')}</div>
+          </div>
+          <button type="button" onclick="quickTrackSample('${barcode}')" class="w-full py-2 px-3 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-xs font-bold cursor-pointer">
+            Track ${escapeHtml(barcode)} Now
+          </button>
+        `;
+      } catch (err) {
+        document.getElementById('custBookingReceipt').innerHTML = `<div class="text-xs font-bold text-red-700">Could not book pickup. Please check form inputs.</div>`;
+      }
+    }
+
+    // Rate Comparison
+    function handleRateCalcSubmit(event) {
+      event.preventDefault();
+      calculateRateComparison();
+    }
+
+    function calculateRateComparison() {
+      const originPin = (document.getElementById('rateOriginPin').value || '302001').trim();
+      const destPin = (document.getElementById('rateDestPin').value || '110001').trim();
+      const weightKg = parseFloat(document.getElementById('rateWeight').value) || 1;
+      const paymentMode = document.getElementById('ratePayType').value;
+      const codAmount = paymentMode === 'COD' ? Math.max(0, parseFloat(document.getElementById('rateCodAmt').value) || 0) : 0;
+
+      const modes = [
+        { key: 'surface', title: 'Surface Standard', badge: 'Economy', desc: 'Reliable hub-to-hub road transport for regular & B2B parcels.' },
+        { key: 'air', title: 'Express Air', badge: 'Fast Transit', desc: 'Priority air/express routing for faster inter-city delivery.' },
+        { key: 'express', title: 'Priority Express', badge: 'Urgent', desc: 'Fast-tracked dispatch with priority hub clearance.' },
+        { key: 'sameday', title: 'Same-Day Local', badge: 'City Express', desc: 'Same-day pickup & handover on eligible city routes.' },
+      ];
+
+      const cards = modes
+        .map((m) => {
+          const est = calculateParcelFare({ originPin, destPin, weightKg, mode: m.key, paymentMode, codAmount });
+          return `
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#EA580C]">${escapeHtml(m.badge)}</span>
+                  <span class="text-xs font-bold text-slate-500">${escapeHtml(est.eta)}</span>
+                </div>
+                <h4 class="text-base font-extrabold text-slate-900">${escapeHtml(m.title)}</h4>
+                <div class="text-2xl font-extrabold text-[#0F4C81]">₹${est.totalFare.toLocaleString('en-IN')}</div>
+                <p class="text-xs text-slate-600">${escapeHtml(m.desc)}</p>
+              </div>
+              <button type="button" onclick="useRateQuoteForBooking('${escapeHtml(originPin)}', '${escapeHtml(destPin)}', ${weightKg}, '${m.key}', '${paymentMode}', ${codAmount})" class="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-[#0F4C81] text-white text-xs font-bold transition cursor-pointer">
+                Book ${escapeHtml(m.title)}
+              </button>
+            </div>
+          `;
+        })
+        .join('');
+
+      document.getElementById('rateResultsGrid').innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm bg-blue-50 border border-blue-200 text-[#0F4C81] px-4 py-3 rounded-xl font-semibold">
+          <span>Route: <strong>${escapeHtml(originPin)}</strong> → <strong>${escapeHtml(destPin)}</strong> (${weightKg.toFixed(1)} kg • ${escapeHtml(paymentMode)}${paymentMode === 'COD' ? ` ₹${codAmount}` : ''})</span>
+          <span>INR (₹) Tariff Estimate</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">${cards}</div>
+      `;
+    }
+
+    function useRateQuoteForBooking(oPin, dPin, w, mode, payType, codAmt) {
+      document.getElementById('custPickupPin').value = oPin;
+      document.getElementById('custDropPin').value = dPin;
+      document.getElementById('custWeight').value = String(w);
+      document.getElementById('custMode').value = mode;
+      document.getElementById('custPayType').value = payType;
+      document.getElementById('custCodAmt').value = String(codAmt);
+      switchMvpTab('pickup');
+      updateCustomerBookingEstimate();
+    }
+
+    // Customer Portal
+    function openCustomerPortalOrLogin() {
+      if (appState.customerUser) {
+        navigateToSection('mvp-workspace', 'account');
+      } else {
+        document.getElementById('customerLoginModal').classList.remove('hidden');
+        document.getElementById('customerLoginModal').classList.add('flex');
+      }
+    }
+
+    function closeCustomerLoginModal() {
+      document.getElementById('customerLoginModal').classList.add('hidden');
+      document.getElementById('customerLoginModal').classList.remove('flex');
+    }
+
+    function loginCustomerInstantDemo() {
+      completeCustomerLogin({ name: 'Vikram Malhotra', firm: 'Malhotra Retail & Trade', contact: 'vikram@example.com • +91 98290 11223' });
+    }
+
+    function handleCustomerLoginForm(event) {
+      event.preventDefault();
+      const idVal = document.getElementById('custLoginId').value.trim();
+      const firm = document.getElementById('custLoginFirm').value.trim() || 'Kamal Enterprise Client';
+      const namePart = idVal.includes('@') ? idVal.split('@')[0].replace(/[._]/g, ' ') : 'Customer Account';
+      completeCustomerLogin({
+        name: namePart.replace(/\b\w/g, (c) => c.toUpperCase()),
+        firm,
+        contact: idVal,
+      });
+    }
+
+    function completeCustomerLogin(user) {
+      appState.customerUser = user;
+      document.getElementById('navCustomerLabel').textContent = `${user.name.split(' ')[0]}'s Portal`;
+      closeCustomerLoginModal();
+      exitAdminToPublic('mvp-workspace', 'account');
+      renderCustomerPortal();
+    }
+
+    function logoutCustomer() {
+      appState.customerUser = null;
+      document.getElementById('navCustomerLabel').textContent = 'Customer Login';
+      renderCustomerPortal();
+    }
+
+    function renderCustomerPortal() {
+      const container = document.getElementById('customerPortalContainer');
+      if (!appState.customerUser) {
+        container.innerHTML = `
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 py-3">
+            <div class="space-y-1.5 max-w-xl">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-[#EA580C]">Customer Portal</span>
+              <h3 class="text-2xl font-extrabold text-slate-900">Sign In to View Shipments, Invoices &amp; Book Pickups</h3>
+              <p class="text-sm text-slate-600">Track active barcodes, inspect statuses updated by Admin, and book new pickups.</p>
+            </div>
+            <div class="flex flex-wrap gap-2.5">
+              <button type="button" onclick="loginCustomerInstantDemo()" class="px-5 py-3 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-sm font-bold cursor-pointer">
+                Demo Login
+              </button>
+              <button type="button" onclick="openCustomerPortalOrLogin()" class="px-5 py-3 rounded-xl bg-[#0F4C81] hover:bg-[#1D4ED8] text-white text-sm font-bold cursor-pointer">
+                Custom Login
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const rows = appState.parcels
+        .map(
+          (p) => `
+          <tr class="border-b border-slate-100 last:border-b-0 text-xs sm:text-sm">
+            <td class="py-3 pr-3 font-mono font-extrabold text-[#0F4C81]">${escapeHtml(p.barcode)}</td>
+            <td class="py-3 pr-3 text-slate-700">${escapeHtml(p.originCity)} (${escapeHtml(p.originPin)}) → ${escapeHtml(p.destCity)} (${escapeHtml(p.destPin)})</td>
+            <td class="py-3 pr-3 font-semibold">₹${p.fareInr.toLocaleString('en-IN')}</td>
+            <td class="py-3 pr-3"><span class="px-2.5 py-0.5 rounded-full border text-xs font-bold ${getStatusBadgeClass(p.status)}">${escapeHtml(p.status)}</span></td>
+            <td class="py-3 text-right">
+              <button type="button" onclick="quickTrackSample('${p.barcode}')" class="px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#0F4C81] text-xs font-bold cursor-pointer">
+                Track
+              </button>
+            </td>
+          </tr>
+        `
+        )
+        .join('');
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-[#EA580C]">Customer Dashboard</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">${escapeHtml(appState.customerUser.name)} <span class="text-sm font-semibold text-slate-500">(${escapeHtml(appState.customerUser.firm)})</span></h3>
+              <p class="text-xs text-slate-500">${escapeHtml(appState.customerUser.contact)}</p>
+            </div>
+            <div class="flex gap-2">
+              <button type="button" onclick="switchMvpTab('pickup')" class="px-4 py-2 rounded-xl bg-[#EA580C] text-white text-xs sm:text-sm font-bold cursor-pointer">+ Book Pickup</button>
+              <button type="button" onclick="logoutCustomer()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 text-xs sm:text-sm font-bold cursor-pointer">Logout</button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500">
+                  <th class="py-2.5 px-3 font-bold">Barcode</th>
+                  <th class="py-2.5 px-3 font-bold">Route</th>
+                  <th class="py-2.5 px-3 font-bold">Fare</th>
+                  <th class="py-2.5 px-3 font-bold">Status</th>
+                  <th class="py-2.5 px-3 font-bold text-right">Track</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 bg-white">${rows}</tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // 4. ADMIN LOGIN & FULL ADMIN OPERATIONS PORTAL
+    // =========================================================================
+    function openAdminPortalOrLogin() {
+      if (appState.adminUser) {
+        showAdminPortalView(appState.activeAdminSection);
+      } else {
+        document.getElementById('adminLoginModal').classList.remove('hidden');
+        document.getElementById('adminLoginModal').classList.add('flex');
+      }
+    }
+
+    function openAdminToSection(sectionKey) {
+      appState.activeAdminSection = sectionKey;
+      openAdminPortalOrLogin();
+    }
+
+    function closeAdminLoginModal() {
+      document.getElementById('adminLoginModal').classList.add('hidden');
+      document.getElementById('adminLoginModal').classList.remove('flex');
+    }
+
+    function loginAdminInstantDemo() {
+      completeAdminLogin({
+        name: 'Kamal Operations Admin',
+        email: 'admin@kamalenterprise.in',
+        scope: 'Super Admin • All India Hubs',
+      });
+    }
+
+    function handleAdminLoginForm(event) {
+      event.preventDefault();
+      const email = document.getElementById('admLoginEmail').value.trim();
+      const scope = document.getElementById('admLoginHubRole').value;
+      const derived = email.includes('@') ? email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : 'Admin User';
+      completeAdminLogin({ name: derived, email, scope });
+    }
+
+    function completeAdminLogin(adminObj) {
+      appState.adminUser = adminObj;
+      document.getElementById('navAdminLabel').textContent = 'Admin Portal';
+      document.getElementById('mobileBarAdminLabel').textContent = 'Admin Portal';
+      document.getElementById('adminSessionBadge').textContent = `${adminObj.name} • ${adminObj.scope}`;
+      closeAdminLoginModal();
+      showAdminPortalView(appState.activeAdminSection || 'overview');
+    }
+
+    function logoutAdminSession() {
+      appState.adminUser = null;
+      document.getElementById('navAdminLabel').textContent = 'Admin Login';
+      document.getElementById('mobileBarAdminLabel').textContent = 'Admin Login';
+      exitAdminToPublic('home');
+    }
+
+    function showAdminPortalView(sectionKey = 'overview') {
+      document.getElementById('publicSiteWrapper').classList.add('hidden');
+      document.getElementById('adminPortalSection').classList.remove('hidden');
+      switchAdminSection(sectionKey);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchAdminSection(sectionKey) {
+      appState.activeAdminSection = sectionKey;
+      const sections = [
+        { id: 'overview', label: '1. Overview & KPIs', count: appState.parcels.length },
+        { id: 'create', label: '2. Create Running Parcel', count: null },
+        { id: 'barcode', label: '3. Barcode / AWB Lookup', count: null },
+        { id: 'manage', label: '4. Manage Tracking & Status', count: appState.parcels.length },
+        { id: 'dispatch', label: '5. Rider & Hub Dispatch', count: appState.riders.length },
+        { id: 'cod', label: '6. COD & Rate Rules', count: null },
+        { id: 'franchise', label: '7. Franchise & Pin Codes', count: appState.franchiseApps.length },
+      ];
+
+      sections.forEach((s) => {
+        const btn = document.getElementById(`admNav-${s.id}`);
+        const panel = document.getElementById(`admPanel-${s.id}`);
+        const active = s.id === sectionKey;
+        if (btn) {
+          btn.className = active
+            ? 'admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center justify-between bg-[#0F4C81] text-white shadow-xs transition cursor-pointer'
+            : 'admin-nav-btn w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-between text-slate-700 hover:bg-slate-100 transition cursor-pointer';
+          btn.innerHTML = `
+            <span>${escapeHtml(s.label)}</span>
+            ${s.count !== null ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold ${active ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'}">${s.count}</span>` : ''}
+          `;
+        }
+        if (panel) {
+          panel.classList.toggle('hidden', !active);
+        }
+      });
+
+      refreshAllAdminViews();
+    }
+
+    function refreshAllAdminViews() {
+      populateAdminSelectOptions();
+      renderAdminOverview();
+      renderAdminBarcodeChips();
+      renderAdminBarcodeInspector(appState.adminInspectedCode);
+      renderAdminManageTable();
+      renderAdminDispatch();
+      renderAdminCodAndRules();
+      renderAdminFranchiseAndPins();
+    }
+
+    function populateAdminSelectOptions() {
+      const riderSel = document.getElementById('admRiderSelect');
+      if (riderSel) {
+        riderSel.innerHTML = appState.riders
+          .map((r) => `<option value="${escapeHtml(r.name)}">${escapeHtml(r.name)} (${escapeHtml(r.hub)})</option>`)
+          .join('');
+      }
+
+      const statusSel = document.getElementById('admInitialStatus');
+      const filterStatus = document.getElementById('admFilterStatus');
+      if (statusSel) {
+        statusSel.innerHTML = STATUS_FLOW.map((st) => `<option value="${escapeHtml(st)}">${escapeHtml(st)}</option>`).join('');
+        statusSel.value = 'Booked';
+      }
+      if (filterStatus) {
+        const currentVal = filterStatus.value || 'ALL';
+        filterStatus.innerHTML =
+          `<option value="ALL">All Statuses</option>` +
+          STATUS_FLOW.map((st) => `<option value="${escapeHtml(st)}">${escapeHtml(st)}</option>`).join('');
+        filterStatus.value = currentVal;
+      }
+    }
+
+    // 1. Admin Overview
+    function renderAdminOverview() {
+      const total = appState.parcels.length;
+      const inTransit = appState.parcels.filter((p) => ['In Transit', 'At Origin Hub', 'At Destination Hub', 'Booked', 'Pickup Assigned', 'Picked Up'].includes(p.status)).length;
+      const ofd = appState.parcels.filter((p) => p.status === 'Out for Delivery').length;
+      const delivered = appState.parcels.filter((p) => p.status === 'Delivered').length;
+      const rtoEx = appState.parcels.filter((p) => ['RTO Initiated', 'Exception'].includes(p.status)).length;
+      const pendingCod = appState.parcels
+        .filter((p) => p.paymentMode === 'COD' && !p.codSettled)
+        .reduce((sum, p) => sum + (Number(p.codAmount) || 0), 0);
+      const activeRiders = appState.riders.filter((r) => r.status === 'On Duty').length;
+      const activePins = appState.servicePins.filter((x) => x.active).length;
+
+      const kpis = [
+        { label: 'Total Parcels', value: String(total), sub: 'Live running & completed', cls: 'text-[#0F4C81]' },
+        { label: 'In Transit / Hub', value: String(inTransit), sub: 'Linehaul & hub scans', cls: 'text-slate-900' },
+        { label: 'Out for Delivery', value: String(ofd), sub: 'With delivery riders', cls: 'text-[#EA580C]' },
+        { label: 'Delivered', value: String(delivered), sub: 'POD & handover logged', cls: 'text-emerald-700' },
+        { label: 'RTO / Exceptions', value: String(rtoEx), sub: 'Needs attention', cls: 'text-red-700' },
+        { label: 'Pending COD (₹)', value: `₹${pendingCod.toLocaleString('en-IN')}`, sub: 'Unsettled COD cash', cls: 'text-[#EA580C]' },
+        { label: 'Active Riders', value: `${activeRiders}/${appState.riders.length}`, sub: 'On-duty executives', cls: 'text-[#0F4C81]' },
+        { label: 'Serviceable Pins', value: String(activePins), sub: `${appState.franchiseApps.length} franchise leads`, cls: 'text-slate-900' },
+      ];
+
+      document.getElementById('adminKpiGrid').innerHTML = kpis
+        .map(
+          (k) => `
+          <div class="rounded-2xl bg-white border border-slate-200 shadow-card p-4">
+            <div class="text-[11px] font-bold text-slate-500">${escapeHtml(k.label)}</div>
+            <div class="text-xl sm:text-2xl font-extrabold ${k.cls} mt-1">${escapeHtml(k.value)}</div>
+            <div class="text-[11px] text-slate-400 mt-0.5">${escapeHtml(k.sub)}</div>
+          </div>
+        `
+        )
+        .join('');
+
+      document.getElementById('adminRecentParcelsList').innerHTML = appState.parcels
+        .slice(0, 5)
+        .map(
+          (p) => `
+          <div class="py-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div>
+              <span class="font-mono font-extrabold text-[#0F4C81]">${escapeHtml(p.barcode)}</span>
+              <span class="text-slate-400 mx-1">•</span>
+              <span class="font-semibold text-slate-800">${escapeHtml(p.originCity)} → ${escapeHtml(p.destCity)}</span>
+              <div class="text-[11px] text-slate-500">${escapeHtml(p.serviceType)} • ${escapeHtml(p.paymentMode)}${p.paymentMode === 'COD' ? ` ₹${p.codAmount}` : ''} • Rider: ${escapeHtml(p.riderName)}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-bold ${getStatusBadgeClass(p.status)}">${escapeHtml(p.status)}</span>
+              <button type="button" onclick="openAdminBarcodeWithCode('${p.barcode}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-[#0F4C81] font-bold cursor-pointer">
+                Inspect
+              </button>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+
+      document.getElementById('adminActivityLog').innerHTML = appState.activityLogs
+        .slice(0, 4)
+        .map(
+          (l) => `
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <div class="text-slate-800 font-medium">${escapeHtml(l.text)}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">${escapeHtml(l.time)}</div>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    function handleAdminOverviewBarcodeSearch(event) {
+      event.preventDefault();
+      const val = (document.getElementById('adminQuickBarcodeInput').value || '').trim().toUpperCase();
+      openAdminBarcodeWithCode(val || 'KEBC100201');
+    }
+
+    function openAdminBarcodeWithCode(code) {
+      const clean = String(code || '').trim().toUpperCase();
+      appState.adminInspectedCode = clean;
+      document.getElementById('adminInspectorInput').value = clean;
+      switchAdminSection('barcode');
+    }
+
+    // 2. Admin Create Running Parcel
+    function prefillAdminParcelForm() {
+      document.getElementById('admSenderName').value = 'Kamal Enterprise Hub';
+      document.getElementById('admSenderPhone').value = '9829011122';
+      document.getElementById('admOriginPin').value = '302001';
+      document.getElementById('admOriginCity').value = 'Jaipur Hub';
+      document.getElementById('admReceiverName').value = 'Metro Electronics Store';
+      document.getElementById('admReceiverPhone').value = '9820122233';
+      document.getElementById('admDestPin').value = '400001';
+      document.getElementById('admDestCity').value = 'Mumbai Hub';
+      document.getElementById('admWeightKg').value = '3.5';
+      document.getElementById('admServiceMode').value = 'air';
+      document.getElementById('admPaymentMode').value = 'COD';
+      document.getElementById('admCodAmount').value = '2650';
+      document.getElementById('admBarcodeInput').value = generateNextBarcode();
+      document.getElementById('admInitialStatus').value = 'At Origin Hub';
+    }
+
+    function toggleAdminCodField() {
+      const mode = document.getElementById('admPaymentMode').value;
+      const codInput = document.getElementById('admCodAmount');
+      if (mode === 'Prepaid') {
+        codInput.value = '0';
+      } else if (Number(codInput.value) <= 0) {
+        codInput.value = '1000';
+      }
+    }
+
+    function handleAdminCreateParcel(event) {
+      event.preventDefault();
+      try {
+        const senderName = document.getElementById('admSenderName').value.trim();
+        const senderPhone = document.getElementById('admSenderPhone').value.trim();
+        const originPin = document.getElementById('admOriginPin').value.trim();
+        const originCity = document.getElementById('admOriginCity').value.trim();
+        const receiverName = document.getElementById('admReceiverName').value.trim();
+        const receiverPhone = document.getElementById('admReceiverPhone').value.trim();
+        const destPin = document.getElementById('admDestPin').value.trim();
+        const destCity = document.getElementById('admDestCity').value.trim();
+        const weightKg = parseFloat(document.getElementById('admWeightKg').value) || 1;
+        const mode = document.getElementById('admServiceMode').value;
+        const paymentMode = document.getElementById('admPaymentMode').value;
+        const codAmount = paymentMode === 'COD' ? Math.max(0, parseFloat(document.getElementById('admCodAmount').value) || 0) : 0;
+        const customCode = (document.getElementById('admBarcodeInput').value || '').trim().toUpperCase();
+        const barcode = customCode || generateNextBarcode();
+        const riderName = document.getElementById('admRiderSelect').value;
+        const status = document.getElementById('admInitialStatus').value;
+
+        if (findParcelByCode(barcode)) {
+          document.getElementById('adminCreatedBarcodeCard').innerHTML = `
+            <div class="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-700">
+              Barcode "${escapeHtml(barcode)}" already exists. Enter a unique barcode or leave blank for auto-generation.
+            </div>
+          `;
+          return;
+        }
+
+        const modeLabels = {
+          surface: 'Surface Standard',
+          air: 'Express Air',
+          express: 'Priority Express',
+          sameday: 'Same-Day Local',
+        };
+        const serviceType = modeLabels[mode] || 'Surface Standard';
+        const est = calculateParcelFare({ originPin, destPin, weightKg, mode, paymentMode, codAmount });
+        const awb = generateNextAwb();
+        const nowStr = 'Just Now (Admin)';
+
+        const newParcel = {
+          barcode,
+          awb,
+          senderName,
+          senderPhone,
+          originPin,
+          originCity,
+          receiverName,
+          receiverPhone,
+          destPin,
+          destCity,
+          weightKg,
+          serviceType,
+          paymentMode,
+          codAmount,
+          codSettled: false,
+          fareInr: est.totalFare,
+          status,
+          currentHub: `${originCity} (${originPin})`,
+          riderName,
+          eta: est.eta,
+          podVerified: status === 'Delivered',
+          podRef: status === 'Delivered' ? 'Admin Verified POD' : 'Pending Handover',
+          history: [
+            { status, hub: `${originCity} (${originPin})`, remark: `Created by Admin • Rider: ${riderName}`, time: nowStr },
+          ],
+        };
+
+        appState.parcels.unshift(newParcel);
+        appState.trackedCode = barcode;
+        appState.adminInspectedCode = barcode;
+        appState.activityLogs.unshift({
+          time: nowStr,
+          text: `Admin created running parcel ${barcode} (${status}) from ${originPin} to ${destPin}.`,
+        });
+
+        renderMvpSampleChips();
+        refreshAllAdminViews();
+        document.getElementById('admBarcodeInput').value = '';
+
+        document.getElementById('adminCreatedBarcodeCard').innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Parcel Created</span>
+            <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-bold ${getStatusBadgeClass(status)}">${escapeHtml(status)}</span>
+          </div>
+          ${renderBarcodeVisual(barcode)}
+          <div class="text-xs text-slate-600 space-y-1 border-t border-slate-100 pt-3">
+            <div><strong>AWB:</strong> <span class="font-mono font-bold text-[#0F4C81]">${escapeHtml(awb)}</span></div>
+            <div><strong>Route:</strong> ${escapeHtml(originCity)} (${escapeHtml(originPin)}) → ${escapeHtml(destCity)} (${escapeHtml(destPin)})</div>
+            <div><strong>Payment:</strong> ${escapeHtml(paymentMode)}${paymentMode === 'COD' ? ` • COD ₹${codAmount.toLocaleString('en-IN')}` : ''} • <strong>Fare:</strong> ₹${est.totalFare.toLocaleString('en-IN')}</div>
+            <div><strong>Assigned Rider:</strong> ${escapeHtml(riderName)}</div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="openAdminBarcodeWithCode('${barcode}')" class="py-2 px-3 rounded-xl bg-[#0F4C81] text-white text-xs font-bold cursor-pointer">
+              Inspect / Update
+            </button>
+            <button type="button" onclick="quickTrackSample('${barcode}')" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold cursor-pointer">
+              Customer Track
+            </button>
+          </div>
+        `;
+      } catch (err) {
+        document.getElementById('adminCreatedBarcodeCard').innerHTML = `<div class="text-xs font-bold text-red-700">Error creating parcel. Check inputs.</div>`;
+      }
+    }
+
+    // 3. Admin Barcode Lookup & Inspector
+    function renderAdminBarcodeChips() {
+      const wrap = document.getElementById('adminBarcodeQuickChips');
+      if (!wrap) return;
+      wrap.innerHTML = `<span class="text-xs font-bold text-slate-500">Sample Barcodes:</span>` +
+        appState.parcels
+          .slice(0, 6)
+          .map(
+            (p) => `
+            <button type="button" onclick="loadInspectorCode('${p.barcode}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-800 hover:text-[#0F4C81] border border-slate-200 text-xs font-mono font-bold cursor-pointer">
+              ${escapeHtml(p.barcode)}
+            </button>
+          `
+          )
+          .join('');
+    }
+
+    function handleAdminBarcodeInspectorForm(event) {
+      event.preventDefault();
+      const val = (document.getElementById('adminInspectorInput').value || '').trim().toUpperCase();
+      appState.adminInspectedCode = val;
+      renderAdminBarcodeInspector(val);
+    }
+
+    function loadInspectorCode(code) {
+      const clean = String(code).trim().toUpperCase();
+      document.getElementById('adminInspectorInput').value = clean;
+      appState.adminInspectedCode = clean;
+      renderAdminBarcodeInspector(clean);
+    }
+
+    function renderAdminBarcodeInspector(code) {
+      const container = document.getElementById('adminBarcodeInspectorResult');
+      if (!container) return;
+      const p = findParcelByCode(code);
+
+      if (!p) {
+        container.innerHTML = `
+          <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs sm:text-sm text-amber-900 font-semibold">
+            No parcel found matching barcode or AWB "${escapeHtml(code)}". Try KEBC100201 or create a new running parcel.
+          </div>
+        `;
+        return;
+      }
+
+      const statusOpts = STATUS_FLOW.map(
+        (st) => `<option value="${escapeHtml(st)}" ${p.status === st ? 'selected' : ''}>${escapeHtml(st)}</option>`
+      ).join('');
+
+      const histHtml = p.history
+        .map(
+          (h) => `
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start justify-between gap-3 text-xs">
+            <div>
+              <span class="font-bold text-slate-900">${escapeHtml(h.status)}</span>
+              <span class="text-slate-400 mx-1">•</span>
+              <span class="font-semibold text-[#0F4C81]">${escapeHtml(h.hub)}</span>
+              <div class="text-slate-600 mt-0.5">${escapeHtml(h.remark)}</div>
+            </div>
+            <span class="text-[11px] text-slate-400 shrink-0">${escapeHtml(h.time)}</span>
+          </div>
+        `
+        )
+        .join('');
+
+      container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div class="lg:col-span-7 rounded-2xl border border-slate-200 p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div>
+                <div class="text-xs font-bold text-slate-400">BARCODE / AWB MATCH</div>
+                <div class="text-xl font-extrabold font-mono text-slate-900">${escapeHtml(p.barcode)} <span class="text-xs text-slate-500">(${escapeHtml(p.awb)})</span></div>
+              </div>
+              <span class="px-3 py-1 rounded-full border text-xs font-extrabold ${getStatusBadgeClass(p.status)}">${escapeHtml(p.status)}</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-xl bg-slate-50">
+                <div class="font-extrabold text-[#0F4C81] mb-1">Sender</div>
+                <div class="font-bold text-slate-900">${escapeHtml(p.senderName)}</div>
+                <div class="text-slate-600">${escapeHtml(p.senderPhone)} • ${escapeHtml(p.originCity)} (${escapeHtml(p.originPin)})</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50">
+                <div class="font-extrabold text-[#EA580C] mb-1">Receiver</div>
+                <div class="font-bold text-slate-900">${escapeHtml(p.receiverName)}</div>
+                <div class="text-slate-600">${escapeHtml(p.receiverPhone)} • ${escapeHtml(p.destCity)} (${escapeHtml(p.destPin)})</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-xl border border-slate-200"><span class="text-slate-400 block">Weight</span><strong>${p.weightKg} kg</strong></div>
+              <div class="p-2.5 rounded-xl border border-slate-200"><span class="text-slate-400 block">Mode</span><strong>${escapeHtml(p.serviceType)}</strong></div>
+              <div class="p-2.5 rounded-xl border border-slate-200"><span class="text-slate-400 block">Payment</span><strong>${escapeHtml(p.paymentMode)}${p.paymentMode === 'COD' ? ` (₹${p.codAmount})` : ''}</strong></div>
+              <div class="p-2.5 rounded-xl border border-slate-200"><span class="text-slate-400 block">Fare</span><strong>₹${p.fareInr}</strong></div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Checkpoint History</div>
+              ${histHtml}
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 space-y-4">
+            ${renderBarcodeVisual(p.barcode)}
+            <form onsubmit="handleInspectorStatusUpdate(event, '${p.barcode}')" class="rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-3">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Quick Status &amp; Hub Update</div>
+              <div>
+                <label for="inspStatusSel" class="block text-xs font-bold text-slate-700 mb-1">New Status</label>
+                <select id="inspStatusSel" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm font-bold">${statusOpts}</select>
+              </div>
+              <div>
+                <label for="inspHubInput" class="block text-xs font-bold text-slate-700 mb-1">Current Hub / Location</label>
+                <input id="inspHubInput" type="text" value="${escapeHtml(p.currentHub)}" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm" />
+              </div>
+              <div>
+                <label for="inspRemarkInput" class="block text-xs font-bold text-slate-700 mb-1">Scan / Dispatch Remark</label>
+                <input id="inspRemarkInput" type="text" placeholder="e.g. Scanned at destination hub & assigned to rider" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm" />
+              </div>
+              <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-[#EA580C] hover:bg-[#F97316] text-white text-xs sm:text-sm font-bold cursor-pointer">
+                Update Parcel Status
+              </button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleInspectorStatusUpdate(event, barcode) {
+      event.preventDefault();
+      const newStatus = document.getElementById('inspStatusSel').value;
+      const newHub = document.getElementById('inspHubInput').value.trim();
+      const remark = document.getElementById('inspRemarkInput').value.trim() || `Status updated to ${newStatus}`;
+      applyParcelStatusUpdate(barcode, newStatus, newHub, remark);
+    }
+
+    function applyParcelStatusUpdate(barcode, newStatus, hubName = null, remarkText = null) {
+      const p = findParcelByCode(barcode);
+      if (!p) return;
+      p.status = newStatus;
+      if (hubName) p.currentHub = hubName;
+      if (newStatus === 'Delivered') {
+        p.podVerified = true;
+        p.podRef = 'OTP Verified + Photo POD Captured';
+        p.eta = 'Delivered (Just Now)';
+      } else if (newStatus === 'Out for Delivery') {
+        p.eta = 'Today (Out for Delivery)';
+      }
+
+      const nowStr = 'Just Now (IST)';
+      p.history.push({
+        status: newStatus,
+        hub: p.currentHub,
+        remark: remarkText || `Updated to ${newStatus} at ${p.currentHub}`,
+        time: nowStr,
+      });
+
+      appState.activityLogs.unshift({
+        time: nowStr,
+        text: `Parcel ${p.barcode} updated to "${newStatus}" (${p.currentHub}).`,
+      });
+
+      refreshAllAdminViews();
+    }
+
+    // 4. Admin Manage Parcels Table
+    function renderAdminManageTable() {
+      const tbody = document.getElementById('adminManageTableBody');
+      if (!tbody) return;
+
+      const q = (document.getElementById('admFilterSearch')?.value || '').trim().toLowerCase();
+      const stFilter = document.getElementById('admFilterStatus')?.value || 'ALL';
+      const payFilter = document.getElementById('admFilterPayment')?.value || 'ALL';
+
+      const filtered = appState.parcels.filter((p) => {
+        const matchesStatus = stFilter === 'ALL' || p.status === stFilter;
+        const matchesPay = payFilter === 'ALL' || p.paymentMode === payFilter;
+        const hay = `${p.barcode} ${p.awb} ${p.senderName} ${p.receiverName} ${p.originCity} ${p.destCity} ${p.originPin} ${p.destPin}`.toLowerCase();
+        const matchesQuery = !q || hay.includes(q);
+        return matchesStatus && matchesPay && matchesQuery;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-6 px-4 text-center text-slate-500">No parcels match the active filter.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered
+        .map((p) => {
+          const opts = STATUS_FLOW.map(
+            (st) => `<option value="${escapeHtml(st)}" ${p.status === st ? 'selected' : ''}>${escapeHtml(st)}</option>`
+          ).join('');
+
+          return `
+            <tr class="hover:bg-slate-50/80">
+              <td class="py-3 px-3">
+                <div class="font-mono font-extrabold text-[#0F4C81]">${escapeHtml(p.barcode)}</div>
+                <div class="font-mono text-[11px] text-slate-500">${escapeHtml(p.awb)}</div>
+              </td>
+              <td class="py-3 px-3">
+                <div class="font-bold text-slate-900">${escapeHtml(p.originCity)} (${escapeHtml(p.originPin)}) → ${escapeHtml(p.destCity)} (${escapeHtml(p.destPin)})</div>
+                <div class="text-xs text-slate-500">${escapeHtml(p.senderName)} → ${escapeHtml(p.receiverName)} • ${p.weightKg} kg</div>
+              </td>
+              <td class="py-3 px-3">
+                <div class="font-bold text-slate-800">${escapeHtml(p.paymentMode)}</div>
+                <div class="text-xs text-slate-500">${p.paymentMode === 'COD' ? `COD ₹${p.codAmount.toLocaleString('en-IN')}` : `Fare ₹${p.fareInr}`}</div>
+              </td>
+              <td class="py-3 px-3">
+                <span class="px-2.5 py-1 rounded-full border text-xs font-bold ${getStatusBadgeClass(p.status)}">${escapeHtml(p.status)}</span>
+              </td>
+              <td class="py-3 px-3">
+                <select aria-label="Change status for ${p.barcode}" onchange="applyParcelStatusUpdate('${p.barcode}', this.value)" class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs font-bold cursor-pointer">
+                  ${opts}
+                </select>
+              </td>
+              <td class="py-3 px-3 text-right whitespace-nowrap space-x-1.5">
+                <button type="button" onclick="openAdminBarcodeWithCode('${p.barcode}')" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#0F4C81] text-xs font-bold cursor-pointer">
+                  Inspect
+                </button>
+                <button type="button" onclick="openBarcodeSlipModal('${p.barcode}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold cursor-pointer">
+                  Label
+                </button>
+              </td>
+            </tr>
+          `;
+        })
+        .join('');
+    }
+
+    // 5. Admin Rider & Hub Dispatch
+    function renderAdminDispatch() {
+      const ridersGrid = document.getElementById('adminRidersGrid');
+      const assignBox = document.getElementById('adminDispatchAssignments');
+      if (!ridersGrid || !assignBox) return;
+
+      ridersGrid.innerHTML = appState.riders
+        .map((r) => {
+          const loadCount = appState.parcels.filter((p) => p.riderName === r.name && p.status !== 'Delivered').length;
+          return `
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-extrabold text-[#0F4C81]">${escapeHtml(r.id)}</span>
+                <button type="button" onclick="toggleRiderDuty('${r.id}')" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold cursor-pointer ${
+                  r.status === 'On Duty' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
+                }">
+                  ${escapeHtml(r.status)}
+                </button>
+              </div>
+              <div class="font-extrabold text-slate-900 text-sm">${escapeHtml(r.name)}</div>
+              <div class="text-xs text-slate-500">${escapeHtml(r.hub)} • ${escapeHtml(r.phone)}</div>
+              <div class="text-xs font-bold text-[#EA580C]">Active Load: ${loadCount} parcel(s)</div>
+            </div>
+          `;
+        })
+        .join('');
+
+      assignBox.innerHTML = appState.parcels
+        .map((p) => {
+          const rOpts = appState.riders
+            .map((r) => `<option value="${escapeHtml(r.name)}" ${p.riderName === r.name ? 'selected' : ''}>${escapeHtml(r.name)}</option>`)
+            .join('');
+          return `
+            <div class="rounded-xl border border-slate-200 bg-white p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+              <div>
+                <span class="font-mono font-extrabold text-[#0F4C81]">${escapeHtml(p.barcode)}</span>
+                <span class="font-bold text-slate-800 ml-2">${escapeHtml(p.originCity)} → ${escapeHtml(p.destCity)}</span>
+                <span class="ml-2 px-2 py-0.5 rounded-full border text-[11px] font-bold ${getStatusBadgeClass(p.status)}">${escapeHtml(p.status)}</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <select aria-label="Rider for ${p.barcode}" onchange="assignRiderToParcel('${p.barcode}', this.value)" class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-slate-50 font-bold cursor-pointer">
+                  ${rOpts}
+                </select>
+                <button type="button" onclick="applyParcelStatusUpdate('${p.barcode}', 'Out for Delivery', '${escapeHtml(p.destCity)} (${escapeHtml(p.destPin)})', 'Dispatched Out for Delivery')" class="px-3 py-1.5 rounded-lg bg-[#EA580C] hover:bg-[#F97316] text-white font-bold cursor-pointer">
+                  Mark OFD
+                </button>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    function toggleRiderDuty(riderId) {
+      const r = appState.riders.find((x) => x.id === riderId);
+      if (!r) return;
+      r.status = r.status === 'On Duty' ? 'Off Duty' : 'On Duty';
+      renderAdminDispatch();
+      renderAdminOverview();
+    }
+
+    function assignRiderToParcel(barcode, riderName) {
+      const p = findParcelByCode(barcode);
+      if (!p) return;
+      p.riderName = riderName;
+      appState.activityLogs.unshift({
+        time: 'Just Now (IST)',
+        text: `Assigned rider ${riderName} to parcel ${p.barcode}.`,
+      });
+      renderAdminOverview();
+    }
+
+    // 6. Admin COD & Tariff Rules
+    function renderAdminCodAndRules() {
+      document.getElementById('ruleBaseFare').value = String(appState.rateRules.baseFare);
+      document.getElementById('rulePerKg').value = String(appState.rateRules.perKg);
+      document.getElementById('ruleExpressMult').value = String(appState.rateRules.expressMult);
+      document.getElementById('ruleCodPct').value = String(appState.rateRules.codPct);
+
+      const codParcels = appState.parcels.filter((p) => p.paymentMode === 'COD');
+      const pendingSum = codParcels.filter((p) => !p.codSettled).reduce((s, p) => s + (Number(p.codAmount) || 0), 0);
+      const settledSum = codParcels.filter((p) => p.codSettled).reduce((s, p) => s + (Number(p.codAmount) || 0), 0);
+
+      document.getElementById('adminCodSummaryBadge').textContent =
+        `Pending: ₹${pendingSum.toLocaleString('en-IN')} • Settled: ₹${settledSum.toLocaleString('en-IN')}`;
+
+      document.getElementById('adminCodList').innerHTML = codParcels.length
+        ? codParcels
+            .map(
+              (p) => `
+              <div class="py-3 flex items-center justify-between gap-3 text-xs">
+                <div>
+                  <span class="font-mono font-extrabold text-[#0F4C81]">${escapeHtml(p.barcode)}</span>
+                  <span class="text-slate-600 ml-1.5">${escapeHtml(p.receiverName)} (${escapeHtml(p.destPin)})</span>
+                  <div class="text-[11px] text-slate-400">Parcel Status: ${escapeHtml(p.status)}</div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-extrabold text-slate-900">₹${Number(p.codAmount || 0).toLocaleString('en-IN')}</span>
+                  ${
+                    p.codSettled
+                      ? `<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold">Settled</span>`
+                      : `<button type="button" onclick="settleCodParcel('${p.barcode}')" class="px-3 py-1 rounded-lg bg-[#0F4C81] hover:bg-[#1D4ED8] text-white font-bold cursor-pointer">Settle COD</button>`
+                  }
+                </div>
+              </div>
+            `
+            )
+            .join('')
+        : `<div class="py-6 text-center text-xs text-slate-500">No COD parcels recorded yet.</div>`;
+    }
+
+    function settleCodParcel(barcode) {
+      const p = findParcelByCode(barcode);
+      if (!p) return;
+      p.codSettled = true;
+      appState.activityLogs.unshift({
+        time: 'Just Now (IST)',
+        text: `COD amount ₹${p.codAmount} settled for parcel ${p.barcode}.`,
+      });
+      renderAdminCodAndRules();
+      renderAdminOverview();
+    }
+
+    function handleSaveRateRules(event) {
+      event.preventDefault();
+      appState.rateRules.baseFare = Math.max(20, parseFloat(document.getElementById('ruleBaseFare').value) || 65);
+      appState.rateRules.perKg = Math.max(5, parseFloat(document.getElementById('rulePerKg').value) || 22);
+      appState.rateRules.expressMult = Math.max(1.0, parseFloat(document.getElementById('ruleExpressMult').value) || 1.45);
+      appState.rateRules.codPct = Math.max(0, parseFloat(document.getElementById('ruleCodPct').value) || 1.5);
+
+      const fb = document.getElementById('rateRuleFeedback');
+      fb.classList.remove('hidden');
+      fb.textContent = 'Rate rules saved! Hero quote, rate calculator & pickup estimates now use updated tariffs.';
+
+      updateHeroQuickEstimate();
+      updateCustomerBookingEstimate();
+      calculateRateComparison();
+    }
+
+    // 7. Admin Franchise & Pin Codes
+    function renderAdminFranchiseAndPins() {
+      const pinsBox = document.getElementById('adminServicePinsList');
+      const franBox = document.getElementById('adminFranchiseAppsList');
+      if (!pinsBox || !franBox) return;
+
+      pinsBox.innerHTML = appState.servicePins
+        .map(
+          (x) => `
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2 text-xs">
+            <div>
+              <span class="font-mono font-extrabold text-[#0F4C81]">${escapeHtml(x.pin)}</span>
+              <span class="text-slate-700 font-semibold ml-2">${escapeHtml(x.city)}</span>
+            </div>
+            <button type="button" onclick="toggleServicePin('${x.pin}')" class="px-2.5 py-1 rounded-full font-bold cursor-pointer ${
+              x.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'
+            }">
+              ${x.active ? 'Active' : 'Paused'}
+            </button>
+          </div>
+        `
+        )
+        .join('');
+
+      franBox.innerHTML = appState.franchiseApps
+        .map(
+          (f) => `
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-slate-900 text-sm">${escapeHtml(f.name)} (${escapeHtml(f.id)})</span>
+              <span class="px-2.5 py-0.5 rounded-full font-bold ${
+                f.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-orange-100 text-[#EA580C]'
+              }">${escapeHtml(f.status)}</span>
+            </div>
+            <div class="text-slate-600">${escapeHtml(f.cityPin)} • <strong>${escapeHtml(f.format)}</strong> • ${escapeHtml(f.phone)}</div>
+            ${f.notes ? `<div class="text-slate-500">${escapeHtml(f.notes)}</div>` : ''}
+            <div class="pt-1 flex gap-2">
+              <button type="button" onclick="setFranchiseAppStatus('${f.id}', 'Approved')" class="px-3 py-1 rounded-lg bg-[#0F4C81] text-white font-bold cursor-pointer">Approve</button>
+              <button type="button" onclick="setFranchiseAppStatus('${f.id}', 'Under Review')" class="px-3 py-1 rounded-lg bg-white border border-slate-300 text-slate-700 font-bold cursor-pointer">Hold / Review</button>
+            </div>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    function handleAddServicePin(event) {
+      event.preventDefault();
+      const pin = document.getElementById('newServicePin').value.trim();
+      const city = document.getElementById('newServiceCity').value.trim();
+      if (!pin || !city) return;
+      appState.servicePins.unshift({ pin, city, active: true });
+      document.getElementById('newServicePin').value = '';
+      document.getElementById('newServiceCity').value = '';
+      renderAdminFranchiseAndPins();
+      renderAdminOverview();
+    }
+
+    function toggleServicePin(pin) {
+      const item = appState.servicePins.find((x) => x.pin === pin);
+      if (!item) return;
+      item.active = !item.active;
+      renderAdminFranchiseAndPins();
+      renderAdminOverview();
+    }
+
+    function setFranchiseAppStatus(id, nextStatus) {
+      const item = appState.franchiseApps.find((f) => f.id === id);
+      if (!item) return;
+      item.status = nextStatus;
+      renderAdminFranchiseAndPins();
+    }
+
+    // Franchise Inquiry Modal
+    function openFranchiseModal() {
+      const fb = document.getElementById('franchiseModalFeedback');
+      fb.className = 'hidden rounded-xl p-3 text-xs font-bold';
+      fb.textContent = '';
+      document.getElementById('franchiseModal').classList.remove('hidden');
+      document.getElementById('franchiseModal').classList.add('flex');
+    }
+
+    function closeFranchiseModal() {
+      document.getElementById('franchiseModal').classList.add('hidden');
+      document.getElementById('franchiseModal').classList.remove('flex');
+    }
+
+    function handleFranchiseInquirySubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('franName').value.trim();
+      const phone = document.getElementById('franPhone').value.trim();
+      const cityPin = document.getElementById('franCityPin').value.trim();
+      const format = document.getElementById('franModel').value;
+      const notes = document.getElementById('franNotes').value.trim();
+
+      const newApp = {
+        id: `FRN-${Math.floor(200 + Math.random() * 799)}`,
+        name,
+        phone,
+        cityPin,
+        format,
+        notes,
+        status: 'Under Review',
+      };
+      appState.franchiseApps.unshift(newApp);
+      appState.activityLogs.unshift({
+        time: 'Just Now',
+        text: `New franchise inquiry from ${name} (${cityPin} • ${format}).`,
+      });
+
+      const fb = document.getElementById('franchiseModalFeedback');
+      fb.className = 'rounded-xl p-3 text-xs font-bold bg-emerald-50 border border-emerald-200 text-emerald-800';
+      fb.textContent = `Inquiry ${newApp.id} submitted for ${name} (${cityPin}) and synced to Admin Portal. Contact: sankaramitcs@gmail.com.`;
+      refreshAllAdminViews();
+    }
+
+    // Barcode Label Modal & Policy Modal
+    function openBarcodeSlipModal(code) {
+      const p = findParcelByCode(code);
+      if (!p) return;
+      openInfoModal(
+        `Barcode & AWB Slip — ${p.barcode}`,
+        `
+        <div class="space-y-3">
+          ${renderBarcodeVisual(p.barcode)}
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
+            <div class="font-extrabold text-slate-900 text-sm">KAMAL ENTERPRISE • PARCEL DISPATCH LABEL</div>
+            <div><strong>Barcode:</strong> <span class="font-mono font-bold">${escapeHtml(p.barcode)}</span> | <strong>AWB:</strong> <span class="font-mono font-bold">${escapeHtml(p.awb)}</span></div>
+            <div><strong>From:</strong> ${escapeHtml(p.senderName)} (${escapeHtml(p.originCity)} - ${escapeHtml(p.originPin)})</div>
+            <div><strong>To:</strong> ${escapeHtml(p.receiverName)} (${escapeHtml(p.destCity)} - ${escapeHtml(p.destPin)})</div>
+            <div><strong>Mode &amp; Weight:</strong> ${escapeHtml(p.serviceType)} • ${p.weightKg} kg • <strong>Status:</strong> ${escapeHtml(p.status)}</div>
+            <div><strong>Payment:</strong> ${escapeHtml(p.paymentMode)}${p.paymentMode === 'COD' ? ` • Collect ₹${p.codAmount.toLocaleString('en-IN')}` : ''}</div>
+          </div>
+          <p class="text-xs text-slate-500">Developed by Sankaram IT Consultant Services (sankaramitcs@gmail.com)</p>
+        </div>
+        `
+      );
+    }
+
+    function openPolicyModal(key) {
+      const policies = {
+        terms: {
+          title: 'Terms & Conditions — Kamal Enterprise',
+          body: '<p>Shippers must declare accurate weight, pin codes, and lawful contents. Delivery estimates vary by corridor, service mode, and local conditions.</p><p>Support &amp; inquiries: sankaramitcs@gmail.com</p>',
+        },
+        privacy: {
+          title: 'Privacy Policy — Kamal Enterprise',
+          body: '<p>Sender, receiver, address, barcode/AWB, and Proof of Delivery (POD) details are used strictly for pickup, linehaul routing, delivery verification, and customer support.</p><p>Contact: sankaramitcs@gmail.com</p>',
+        },
+        cod: {
+          title: 'Refund, Claims & COD Policy — Kamal Enterprise',
+          body: '<p>COD collections are recorded upon delivery handover and tracked for settlement. Claims or service adjustments are reviewed against scan logs and POD records via sankaramitcs@gmail.com.</p>',
+        },
+      };
+      const item = policies[key] || policies.terms;
+      openInfoModal(item.title, item.body);
+    }
+
+    function openInfoModal(title, html) {
+      document.getElementById('infoModalTitle').textContent = title;
+      document.getElementById('infoModalBody').innerHTML = html;
+      document.getElementById('infoModal').classList.remove('hidden');
+      document.getElementById('infoModal').classList.add('flex');
+    }
+
+    function closeInfoModal() {
+      document.getElementById('infoModal').classList.add('hidden');
+      document.getElementById('infoModal').classList.remove('flex');
+    }
+
+    // =========================================================================
+    // 5. UTILITIES & INITIALIZATION
+    // =========================================================================
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('currentYear').textContent = String(new Date().getFullYear());
+      updateHeroQuickEstimate();
+      renderServicesGrid();
+      switchMvpTab('track');
+      renderMvpSampleChips();
+      renderMvpTrackingResult(appState.trackedCode);
+      updateCustomerBookingEstimate();
+      calculateRateComparison();
+      renderCustomerPortal();
+    });
+  </script>
+</body>
+</html>
